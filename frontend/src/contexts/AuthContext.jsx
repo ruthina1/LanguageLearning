@@ -1,4 +1,3 @@
-// frontend/src/contexts/AuthContext.js
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { authAPI } from '../services/api';
 
@@ -41,14 +40,9 @@ export function AuthProvider({ children }) {
 
   const signup = async (userData) => {
     try {
-      console.log('🔄 AuthContext: Calling API register with:', userData);
-      
-      // Call the actual API
       const result = await authAPI.register(userData);
-      console.log('📨 API Response:', result);
-      
+
       if (result.success) {
-        console.log('✅ Registration successful');
         localStorage.setItem('token', result.token);
         setCurrentUser(result.user);
         return result;
@@ -56,25 +50,22 @@ export function AuthProvider({ children }) {
         throw new Error(result.message || 'Registration failed');
       }
     } catch (error) {
-      console.error('❌ AuthContext Signup error:', error);
       throw error;
     }
   };
 
-  const login = async (username, password) => {
-    try {
-      const result = await authAPI.login(username, password);
-      if (result.success) {
-        localStorage.setItem('token', result.token);
-        setCurrentUser(result.user);
-        return result;
-      } else {
-        throw new Error(result.message || 'Login failed');
-      }
-    } catch (error) {
-      throw error;
-    }
-  };
+   const login = async ({ username, password }) => {
+  const result = await authAPI.login({ username, password });
+  console.log('AuthContext login result:', result); // Debug log
+  
+  if (!result.success) {
+    throw new Error(result.error || 'Login failed');
+  }
+  
+  localStorage.setItem('token', result.token);
+  setCurrentUser(result.user);
+  return result;
+};
 
   const logout = () => {
     localStorage.removeItem('token');

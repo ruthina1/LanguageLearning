@@ -2,6 +2,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import User from '../models/User.js';
+import pool from '../config/db.js';  
 
 const JWT_SECRET = process.env.JWT_SECRET || 'secretKey';
 
@@ -58,43 +59,53 @@ export const register = async (req, res) => {
 
 // Login 
 export const login = async (req, res) => {
- 
   try {
     const { username, password } = req.body;
 
     if (!username || !password) {
-      return res.status(400).json({ error: 'Username and password are required' });
+      return res.status(400).json({ 
+        success: false,  // Add this
+        error: 'Username and password are required' 
+      });
     }
 
-    // Find user by username or email
-    const [users] = await pool.query(
+    // Query using pool.query
+    const [rows] = await pool.query(
       `SELECT id, email, username, password_hash, display_name, avatar_url, 
-              native_language, target_language, level, total_xp, current_streak, best_streak 
-       FROM users WHERE username = ? OR email = ?`,
-      [username, email]
+              native_language, target_language, level, total_xp, current_streak, best_streak
+       FROM users
+       WHERE username = ? OR email = ?`,
+      [username, username]
     );
 
-    if (users.length === 0) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+    if (rows.length === 0) {
+      return res.status(401).json({ 
+        success: false,  // Add this
+        error: 'Invalid credentials' 
+      });
     }
 
-    const user = users[0];
+    const user = rows[0];
 
-    // Verify password
+    // Compare password
     const isValidPassword = await bcrypt.compare(password, user.password_hash);
-   
+
     if (!isValidPassword) {
-      return res.status(401).json({ error: 'Invalid password' });
+      return res.status(401).json({ 
+        success: false,  // Add this
+        error: 'Invalid credentials' 
+      });
     }
 
     // Generate token
     const token = jwt.sign(
       { userId: user.id, username: user.username },
-      JWT_SECRET,
+      process.env.JWT_SECRET, // Use environment variable
       { expiresIn: '24h' }
     );
 
     res.json({
+      success: true,  // Add this
       message: 'Login successful',
       user: {
         id: user.id,
@@ -114,8 +125,11 @@ export const login = async (req, res) => {
 
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ error: 'Internal server error: ' + error.message });
-  } 
+    res.status(500).json({ 
+      success: false,  // Add this
+      error: 'Internal server error: ' + error.message 
+    });
+  }
 };
 
 
