@@ -131,19 +131,29 @@ export const login = async (req, res) => {
     });
   }
 };
-
-
+// --- TOKEN VERIFICATION MIDDLEWARE ---
 export const verifyToken = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ error: "No token provided" });
+  const token = req.headers.authorization?.split(' ')[1];
+  
+  if (!token) {
+    return res.status(401).json({ error: 'No token provided' });
+  }
 
-  const token = authHeader.split(" ")[1];
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
-    if (err) return res.status(401).json({ error: "Invalid token" });
-    req.userId = decoded.userId;
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // This should include the user id
     next();
-  });
+  } catch (error) {
+    return res.status(401).json({ error: 'Invalid token' });
+  }
 };
+
+
+// --- TOKEN VERIFICATION CONTROLLER ---
+export const verifyTokenController = (req, res) => {
+  res.json({ success: true, message: 'Token is valid', userId: req.userId });
+};
+
 
 export const updateLanguagePreferences = async (req, res) => {
   try {
