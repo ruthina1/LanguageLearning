@@ -1,4 +1,3 @@
-/* frontend/src/pages/Lessons/LessonPage.css */
 .lesson-page {
   width: 100%;
   max-width: 1200px;
@@ -30,7 +29,7 @@
   font-size: 2.5rem;
   margin-bottom: 16px;
   font-weight: 700;
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  background: linear-gradient(135deg, #43cea2, #38ef7d);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -50,7 +49,6 @@
   gap: 30px;
 }
 
-/* Lesson Sections */
 .lesson-section {
   background: #f8f9fa;
   border-radius: 16px;
@@ -60,8 +58,8 @@
 }
 
 .lesson-section:hover {
-  border-color: #6a11cb;
-  box-shadow: 0 4px 15px rgba(106, 17, 203, 0.1);
+  border-color: #43cea2;
+  box-shadow: 0 4px 15px rgba(67, 206, 162, 0.1);
 }
 
 .lesson-section h2 {
@@ -75,7 +73,7 @@
 }
 
 .lesson-section h2 svg {
-  color: #6a11cb;
+  color: #43cea2;
 }
 
 .lesson-section ul {
@@ -93,13 +91,12 @@
 
 .lesson-section li::before {
   content: '•';
-  color: #6a11cb;
+  color: #43cea2;
   font-weight: bold;
   position: absolute;
   left: -18px;
 }
 
-/* Audio Section */
 .audio-container {
   text-align: center;
 }
@@ -112,7 +109,6 @@
   background: white;
 }
 
-/* Transcript Section */
 .transcript-container pre {
   background: white;
   border: 1px solid #e1e5e9;
@@ -126,7 +122,6 @@
   word-wrap: break-word;
 }
 
-/* Vocabulary Section */
 .vocabulary-container li {
   background: white;
   padding: 15px;
@@ -137,16 +132,15 @@
 }
 
 .vocabulary-container li:hover {
-  border-color: #6a11cb;
+  border-color: #43cea2;
   transform: translateX(5px);
 }
 
 .vocabulary-container strong {
-  color: #6a11cb;
+  color: #43cea2;
   font-weight: 600;
 }
 
-/* Exercises Section */
 .exercises-container {
   background: white;
 }
@@ -161,7 +155,7 @@
 }
 
 .exercise:hover {
-  border-color: #2575fc;
+  border-color: #38ef7d;
 }
 
 .exercise p {
@@ -172,7 +166,6 @@
   line-height: 1.6;
 }
 
-/* Multiple Choice Options */
 .option-btn {
   display: block;
   width: 100%;
@@ -189,8 +182,8 @@
 }
 
 .option-btn:hover {
-  border-color: #2575fc;
-  background: #f0f6ff;
+  border-color: #38ef7d;
+  background: #f0fff5;
   transform: translateY(-2px);
 }
 
@@ -206,7 +199,6 @@
   border-color: #f56565;
 }
 
-/* Fill in the Blank */
 .exercise input[type="text"] {
   width: 100%;
   max-width: 300px;
@@ -222,15 +214,14 @@
 
 .exercise input[type="text"]:focus {
   outline: none;
-  border-color: #2575fc;
-  box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.1);
+  border-color: #38ef7d;
+  box-shadow: 0 0 0 3px rgba(56, 239, 125, 0.1);
 }
 
 .exercise input[type="text"]::placeholder {
   color: #a0aec0;
 }
 
-/* Feedback */
 .feedback {
   display: inline-flex;
   align-items: center;
@@ -251,14 +242,13 @@
   color: white;
 }
 
-/* Tips Section */
 .tips-container {
-  background: linear-gradient(135deg, #fffaf0, #fed7d7);
-  border-color: #fbd38d;
+  background: linear-gradient(135deg, #f0fff4, #c6f6d5);
+  border-color: #9ae6b4;
 }
 
 .tips-container h2 {
-  color: #744210;
+  color: #22543d;
 }
 
 .tips-container li {
@@ -266,10 +256,9 @@
   border-radius: 8px;
   padding: 12px 16px;
   margin-bottom: 10px;
-  border: 1px solid #fbd38d;
+  border: 1px solid #9ae6b4;
 }
 
-/* Lesson Navigation */
 .lesson-navigation {
   display: flex;
   justify-content: space-between;
@@ -280,7 +269,7 @@
 }
 
 .nav-button {
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  background: linear-gradient(135deg, #43cea2, #38ef7d);
   color: white;
   border: none;
   padding: 14px 28px;
@@ -292,12 +281,12 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 4px 12px rgba(106, 17, 203, 0.2);
+  box-shadow: 0 4px 12px rgba(67, 206, 162, 0.2);
 }
 
 .nav-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(106, 17, 203, 0.3);
+  box-shadow: 0 6px 20px rgba(67, 206, 162, 0.3);
 }
 
 .nav-button:active {
@@ -312,7 +301,6 @@
   box-shadow: none;
 }
 
-/* Loading and Error States */
 .loading-container, .error-container {
   display: flex;
   justify-content: center;
@@ -334,11 +322,10 @@
   color: #e53e3e;
 }
 
-/* Mobile View */
 @media (max-width: 768px) {
   .lesson-page {
     padding: 12px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #43cea2 0%, #38ef7d 100%);
   }
 
   .lesson-container {
@@ -409,7 +396,6 @@
   }
 }
 
-/* Small Mobile View */
 @media (max-width: 480px) {
   .lesson-container {
     padding: 20px 16px;
@@ -444,7 +430,6 @@
   }
 }
 
-/* Dark Mode Support */
 @media (prefers-color-scheme: dark) {
   .lesson-page {
     background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
@@ -516,17 +501,17 @@
   }
 
   .tips-container {
-    background: linear-gradient(135deg, #744210, #9c4221);
-    border-color: #d69e2e;
+    background: linear-gradient(135deg, #22543d, #276749);
+    border-color: #38a169;
   }
 
   .tips-container h2 {
-    color: #fbd38d;
+    color: #9ae6b4;
   }
 
   .tips-container li {
     background: rgba(45, 55, 72, 0.8);
-    border-color: #d69e2e;
+    border-color: #38a169;
     color: #e2e8f0;
   }
 
@@ -536,7 +521,7 @@
   }
 }
 
-/* Animation for loading state */
+
 @keyframes pulse {
   0% { opacity: 0.6; }
   50% { opacity: 1; }
@@ -547,7 +532,7 @@
   animation: pulse 2s ease-in-out infinite;
 }
 
-/* Exercise animations */
+
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -563,7 +548,7 @@
   animation: slideIn 0.5s ease-out;
 }
 
-/* Success animation for correct answers */
+
 @keyframes correctPulse {
   0% { transform: scale(1); }
   50% { transform: scale(1.05); }
@@ -574,7 +559,7 @@
   animation: correctPulse 0.6s ease;
 }
 
-/* Smooth transitions */
+
 .lesson-container,
 .nav-button,
 .lesson-section,

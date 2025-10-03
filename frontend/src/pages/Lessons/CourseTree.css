@@ -1,11 +1,10 @@
-/* frontend/src/pages/Lessons/CourseTree.css */
 .course-tree {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f0f2f5;
+  background: transparent;
   min-height: 100vh;
 }
 
@@ -32,7 +31,7 @@
   margin: 0;
 }
 
-/* Vertical Tree Container - Desktop Optimized */
+
 .vertical-tree-container {
   background: white;
   border-radius: 20px;
@@ -46,7 +45,6 @@
   padding: 40px;
 }
 
-/* Vertical Level Section - Desktop Layout */
 .vertical-level-section {
   margin-bottom: 50px;
   position: relative;
@@ -59,7 +57,6 @@
   margin-bottom: 0;
 }
 
-/* Level Header - Desktop Style */
 .vertical-level-header {
   display: flex;
   flex-direction: column;
@@ -76,8 +73,8 @@
 
 .vertical-level-header.unlocked {
    background: white;
-  border-color: #6a11cb; /* purple */
-  box-shadow: 0 4px 16px rgba(106, 17, 203, 0.2);
+  border-color: #43cea2; /* teal */
+  box-shadow: 0 4px 16px rgba(67, 206, 162, 0.2);
 }
 
 .vertical-level-header.locked {
@@ -97,10 +94,10 @@
 }
 
 .vertical-level-header.unlocked .level-indicator {
- background: #6a11cb;
+ background: #43cea2;
   color: white;
-  border: 4px solid #6a11cb;
-  box-shadow: 0 4px 12px rgba(106, 17, 203, 0.4);
+  border: 4px solid #43cea2;
+  box-shadow: 0 4px 12px rgba(67, 206, 162, 0.4);
 }
 
 .vertical-level-header.locked .level-indicator {
@@ -145,7 +142,6 @@
   color: #999;
 }
 
-/* Vertical Skills Container - Desktop Grid */
 .vertical-skills-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -154,7 +150,6 @@
   padding-top: 10px;
 }
 
-/* Vertical Skill Node - Desktop Style */
 .vertical-skill-node {
   display: flex;
   align-items: center;
@@ -169,29 +164,29 @@
 }
 
 .vertical-skill-node.available {
-  border-color: #2575fc; /* blue */
+  border-color: #38ef7d; 
   background: white;
-  box-shadow: 0 4px 12px rgba(37, 117, 252, 0.15);
+  box-shadow: 0 4px 12px rgba(56, 239, 125, 0.15);
 }
 
 .vertical-skill-node.available:hover {
-  border-color: #2575fc;
-  background: #f0f6ff;
+  border-color: #38ef7d;
+  background: #f0fff5;
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(37, 117, 252, 0.25);
+  box-shadow: 0 8px 24px rgba(56, 239, 125, 0.25);
 }
 
 .vertical-skill-node.completed {
-   border-color: #6a11cb; /* purple */
+   border-color: #43cea2;
   background: white;
-  box-shadow: 0 4px 12px rgba(106, 17, 203, 0.15);
+  box-shadow: 0 4px 12px rgba(67, 206, 162, 0.15);
 }
 
 .vertical-skill-node.completed:hover {
-  border-color: #6a11cb;
-  background: #f9f5ff;
+  border-color: #43cea2;
+  background: #f0fffa;
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(106, 17, 203, 0.25);
+  box-shadow: 0 8px 24px rgba(67, 206, 162, 0.25);
 }
 
 .vertical-skill-node.locked {
@@ -218,11 +213,11 @@
 }
 
 .vertical-skill-node.available .skill-icon {
- background: #2575fc;
+ background: #38ef7d;
 }
 
 .vertical-skill-node.completed .skill-icon {
-  background: #6a11cb;
+  background: #43cea2;
 }
 
 .vertical-skill-node.locked .skill-icon {
@@ -245,7 +240,7 @@
 }
 
 .completion-badge {
-  background: #6a11cb;
+  background: #43cea2;
   color: white;
   color: white;
   padding: 4px 12px;
@@ -261,11 +256,11 @@
   font-weight: 500;
 }
 
-/* Level Connector - Desktop Style */
+/* the level connector for the desktop that arrow */
 .level-connector {
   width: 3px;
   height: 40px;
-  background: #6a11cb;
+  background: #43cea2;
   margin: 0 auto;
   position: absolute;
   bottom: -45px;
@@ -283,10 +278,9 @@
   height: 0;
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
-  border-bottom: 6px solid #6a11cb;
+  border-bottom: 6px solid #43cea2;
 }
 
-/* Progress Summary - Desktop Style */
 .progress-summary {
   background: white;
   border-radius: 20px;
@@ -329,14 +323,14 @@
   left: 0;
   width: 6px;
   height: 100%;
- background: #6a11cb;
+ background: #43cea2;
   color: white;
 }
 
 .stat:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  border-color: #6a11cb;
+  border-color: #43cea2;
   color: white;
 }
 
@@ -354,7 +348,6 @@
   font-weight: 500;
 }
 
-/* Icon Colors */
 .completed-icon {
   color: white;
   font-size: 1.4rem;
@@ -370,7 +363,7 @@
   font-size: 1.4rem;
 }
 
-/* Animation for available skill nodes */
+
 @keyframes gentle-pulse {
   0% { transform: scale(1); }
   50% { transform: scale(1.05); }
@@ -385,7 +378,6 @@
   animation: none;
 }
 
-/* Desktop Specific Enhancements */
 @media (min-width: 1024px) {
   .vertical-skills-container {
     grid-template-columns: repeat(2, 1fr);
@@ -400,7 +392,6 @@
   }
 }
 
-/* Tablet View */
 @media (max-width: 1023px) and (min-width: 769px) {
   .vertical-level-section {
     flex-direction: column;
@@ -423,13 +414,10 @@
   }
 }
 
-/* Mobile View */
-/* 📱 Mobile View - Enhanced & Attractive */
 @media (max-width: 768px) {
   .course-tree {
     padding: 10px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-
+    background: linear-gradient(135deg, #43cea2 0%, #38ef7d 100%);
   }
 
   .course-header {
@@ -445,7 +433,7 @@
   .course-header h1 {
     font-size: 1.8rem;
     line-height: 1.2;
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    background: linear-gradient(135deg, #43cea2, #38ef7d);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -465,7 +453,6 @@
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-
   }
 
   .vertical-tree-content {
@@ -489,7 +476,7 @@
     left: 24px;
     width: 3px;
     height: calc(100% + 20px);
-    background: linear-gradient(to bottom, #6a11cb, #2575fc);
+    background: linear-gradient(to bottom, #43cea2, #38ef7d);
     opacity: 0.3;
     z-index: 1;
   }
@@ -512,9 +499,9 @@
   }
 
   .vertical-level-header.unlocked {
-    background: linear-gradient(135deg, #ffffff, #f8f9ff);
-    border-color: #6a11cb;
-    box-shadow: 0 6px 20px rgba(106, 17, 203, 0.15);
+    background: linear-gradient(135deg, #ffffff, #f0fff5);
+    border-color: #43cea2;
+    box-shadow: 0 6px 20px rgba(67, 206, 162, 0.15);
   }
 
   .vertical-level-header.locked {
@@ -531,9 +518,9 @@
   }
 
   .vertical-level-header.unlocked .level-indicator {
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    background: linear-gradient(135deg, #43cea2, #38ef7d);
     border: none;
-    box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
+    box-shadow: 0 4px 15px rgba(67, 206, 162, 0.3);
   }
 
   .vertical-level-header.locked .level-indicator {
@@ -603,25 +590,25 @@
   }
 
   .vertical-skill-node.available {
-    background: linear-gradient(135deg, #ffffff, #f0f4ff);
-    border-color: #2575fc;
-    box-shadow: 0 4px 15px rgba(37, 117, 252, 0.15);
+    background: linear-gradient(135deg, #ffffff, #f0fff5);
+    border-color: #38ef7d;
+    box-shadow: 0 4px 15px rgba(56, 239, 125, 0.15);
   }
 
   .vertical-skill-node.available:active {
     transform: scale(0.98);
-    box-shadow: 0 2px 8px rgba(37, 117, 252, 0.2);
+    box-shadow: 0 2px 8px rgba(56, 239, 125, 0.2);
   }
 
   .vertical-skill-node.completed {
-    background: linear-gradient(135deg, #ffffff, #f9f5ff);
-    border-color: #6a11cb;
-    box-shadow: 0 4px 15px rgba(106, 17, 203, 0.15);
+    background: linear-gradient(135deg, #ffffff, #f0fffa);
+    border-color: #43cea2;
+    box-shadow: 0 4px 15px rgba(67, 206, 162, 0.15);
   }
 
   .vertical-skill-node.completed:active {
     transform: scale(0.98);
-    box-shadow: 0 2px 8px rgba(106, 17, 203, 0.2);
+    box-shadow: 0 2px 8px rgba(67, 206, 162, 0.2);
   }
 
   .vertical-skill-node.locked {
@@ -640,13 +627,13 @@
   }
 
   .vertical-skill-node.available .skill-icon {
-    background: linear-gradient(135deg, #2575fc, #6a11cb);
-    box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3);
+    background: linear-gradient(135deg, #38ef7d, #43cea2);
+    box-shadow: 0 4px 15px rgba(56, 239, 125, 0.3);
   }
 
   .vertical-skill-node.completed .skill-icon {
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
-    box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
+    background: linear-gradient(135deg, #43cea2, #38ef7d);
+    box-shadow: 0 4px 15px rgba(67, 206, 162, 0.3);
   }
 
   .vertical-skill-node.locked .skill-icon {
@@ -670,14 +657,14 @@
   }
 
   .completion-badge {
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    background: linear-gradient(135deg, #43cea2, #38ef7d);
     color: white;
     padding: 6px 12px;
     border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 700;
     display: inline-block;
-    box-shadow: 0 2px 8px rgba(106, 17, 203, 0.2);
+    box-shadow: 0 2px 8px rgba(67, 206, 162, 0.2);
   }
 
   .locked-text {
@@ -691,7 +678,7 @@
   .level-connector {
     width: 4px;
     height: 20px;
-    background: linear-gradient(to bottom, #6a11cb, #2575fc);
+    background: linear-gradient(to bottom, #43cea2, #38ef7d);
     margin: 0 auto;
     position: absolute;
     bottom: -28px;
@@ -717,7 +704,7 @@
   .progress-summary h3 {
     font-size: 1.4rem;
     margin-bottom: 20px;
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    background: linear-gradient(135deg, #43cea2, #38ef7d);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -733,7 +720,7 @@
     border-radius: 16px;
     border: 2px solid;
     border-color: #e5e7eb;
-    background: linear-gradient(135deg, #ffffff, #f8f9ff);
+    background: linear-gradient(135deg, #ffffff, #f0fff5);
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease;
@@ -746,7 +733,7 @@
     left: 0;
     width: 6px;
     height: 100%;
-    background: linear-gradient(to bottom, #6a11cb, #2575fc);
+    background: linear-gradient(to bottom, #43cea2, #38ef7d);
   }
 
   .stat:active {
@@ -757,7 +744,7 @@
     font-size: 2rem;
     font-weight: 800;
     margin-bottom: 4px;
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    background: linear-gradient(135deg, #43cea2, #38ef7d);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -771,11 +758,10 @@
     letter-spacing: 0.5px;
   }
 
-  /* Enhanced animations for mobile */
   @keyframes mobile-pulse {
-    0% { transform: scale(1); box-shadow: 0 4px 15px rgba(37, 117, 252, 0.15); }
-    50% { transform: scale(1.02); box-shadow: 0 6px 20px rgba(37, 117, 252, 0.25); }
-    100% { transform: scale(1); box-shadow: 0 4px 15px rgba(37, 117, 252, 0.15); }
+    0% { transform: scale(1); box-shadow: 0 4px 15px rgba(56, 239, 125, 0.15); }
+    50% { transform: scale(1.02); box-shadow: 0 6px 20px rgba(56, 239, 125, 0.25); }
+    100% { transform: scale(1); box-shadow: 0 4px 15px rgba(56, 239, 125, 0.15); }
   }
 
   .vertical-skill-node.available {
@@ -783,9 +769,9 @@
   }
 
   @keyframes glow {
-    0% { box-shadow: 0 4px 15px rgba(106, 17, 203, 0.15); }
-    50% { box-shadow: 0 6px 20px rgba(106, 17, 203, 0.25); }
-    100% { box-shadow: 0 4px 15px rgba(106, 17, 203, 0.15); }
+    0% { box-shadow: 0 4px 15px rgba(67, 206, 162, 0.15); }
+    50% { box-shadow: 0 6px 20px rgba(67, 206, 162, 0.25); }
+    100% { box-shadow: 0 4px 15px rgba(67, 206, 162, 0.15); }
   }
 
   .vertical-skill-node.completed {
@@ -793,7 +779,6 @@
   }
 }
 
-/* 📱 Small Mobile View (<=480px) - Ultra Enhanced */
 @media (max-width: 480px) {
   .course-tree {
     padding: 8px;
