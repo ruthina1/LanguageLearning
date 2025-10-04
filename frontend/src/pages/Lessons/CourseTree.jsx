@@ -1,57 +1,71 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaCheckCircle, FaLock, FaBookOpen } from 'react-icons/fa';
-import { fetchLessons } from '../../services/api';
+import { fetchLessons, getUserProgress } from '../../services/api';
+import { useAuth } from '../../contexts/AuthContext';
 import './CourseTree.css';
 
 export default function CourseTree() {
   const [courseData, setCourseData] = useState([]);
-  const [progress, setProgress] = useState({});
+  const [progress, setProgress] = useState({ current_level: 1, completedLessons: [], unlockedSkills: [] });
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const getData = async () => {
-      setLoading(true);
-      try {
-        const response = await fetchLessons();
-        const lessonsData = response.courseData || [];
-        setCourseData(lessonsData);
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
-        const mockProgress = {
-          current_level: 2,
-          lessons_completed: [1, 2, 3],
-        };
+useEffect(() => {
+  const getData = async () => {
+    setLoading(true);
+    try {
+      const response = await fetchLessons();
+      const lessonsData = response.courseData || [];
+      setCourseData(lessonsData);
 
-        const unlockedSkills = [];
-        lessonsData.forEach(level => {
-          if (level.level <= mockProgress.current_level) {
-            level.skills.forEach(skill => unlockedSkills.push(skill.id));
-          }
-        });
+      const userId = JSON.parse(localStorage.getItem('user')).id;
+      const res = await getUserProgress(userId);
+      const userProgress = res.data || { current_level: 1, lessons_completed: [] };
 
-        setProgress({
-          ...mockProgress,
-          unlockedSkills,
-          completedLessons: mockProgress.lessons_completed,
-        });
-      } catch (err) {
-        console.error('Error fetching lessons:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    getData();
-  }, []);
+      const unlockedSkills = [];
+      lessonsData.forEach(level => {
+        if (level.level <= userProgress.current_level) {
+          level.skills.forEach(skill => unlockedSkills.push(skill.id));
+        }
+      });
 
-const navigate = useNavigate();
+      setProgress({
+        ...userProgress,
+        unlockedSkills,
+        completedLessons: userProgress.lessons_completed,
+      });
+
+
+const localProgress = JSON.parse(localStorage.getItem('userProgress')) || {};
+if (localProgress.lessons_completed?.length) {
+  const merged = [...new Set([
+    ...userProgress.lessons_completed,
+    ...localProgress.lessons_completed,
+  ])];
+  setProgress(prev => ({ ...prev, completedLessons: merged }));
+}
+
+    } catch (err) {
+      console.error('Error fetching lessons:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  getData();
+}, []);
+
 
 const handleSkillClick = (skill) => {
-  const completed = progress.completedLessons?.includes(skill.id);
-  const locked = !progress.unlockedSkills?.includes(skill.id);
-  if (!locked && !completed) {
+  const locked = !progress.unlockedSkills.includes(skill.id);
+  if (!locked) {
     navigate(`/lesson/${skill.id}`);
   }
 };
+
+
   if (loading) return <div className="loading">Loading lessons...</div>;
 
   return (
@@ -80,8 +94,8 @@ const handleSkillClick = (skill) => {
 
                 <div className="vertical-skills-container">
                   {level.skills.map(skill => {
-                    const completed = progress.completedLessons?.includes(skill.id);
-                    const locked = !progress.unlockedSkills?.includes(skill.id);
+                    const completed = progress.completedLessons.includes(skill.id);
+                    const locked = !progress.unlockedSkills.includes(skill.id);
                     return (
                       <div
                         key={skill.id}

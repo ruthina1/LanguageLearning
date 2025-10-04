@@ -7,7 +7,8 @@ import dashboardRoutes from "./routes/dashboardRoutes.js";
 import lessonRoutes from "./routes/lessonRoutes.js";
 import progressRoutes from "./routes/progressRoutes.js";
 import activitiesRoutes from './routes/activitiesRoutes.js';
-import aitutorRoutes from './routes/aitutorRoutes.js';
+import communityRoutes from './routes/communityRoutes.js';
+
 
 dotenv.config();
 
@@ -21,6 +22,8 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use('/api/lessons', lessonRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/activities', activitiesRoutes);
+app.use('/api/community', communityRoutes);
+
 
 
 const PORT = process.env.PORT || 7000;

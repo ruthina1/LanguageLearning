@@ -1,9 +1,8 @@
 import * as Lesson from '../models/lessonModel.js';
 
-// GET /api/lessons
 export const getLessons = async (req, res) => {
   try {
-    const lessons = await Lesson.getAllLessons(); // must return array of lessons
+    const lessons = await Lesson.getAllLessons(); 
     const courseData = [];
     const levels = [...new Set(lessons.map(l => l.level))];
 
@@ -17,10 +16,10 @@ export const getLessons = async (req, res) => {
       });
     });
 
-    res.json({ courseData }); // must return JSON
+    res.json({ courseData }); 
   } catch (err) {
     console.error('Error in getLessons:', err);
-    res.status(500).json({ message: 'Failed to fetch lessons' }); // always send valid JSON
+    res.status(500).json({ message: 'Failed to fetch lessons' }); 
   }
 };
 

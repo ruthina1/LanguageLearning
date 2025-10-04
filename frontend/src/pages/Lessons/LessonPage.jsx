@@ -1,7 +1,6 @@
-// src/pages/Lessons/LessonPage.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchLessonById } from '../../services/api';
+import { fetchLessonById, getUserProgress, updateUserProgress, fetchLessons } from '../../services/api';
 import {
   FaHeadphones,
   FaBookOpen,
@@ -17,92 +16,237 @@ import './LessonPage.css';
 export default function LessonPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+
   const [lesson, setLesson] = useState(null);
   const [parsedContent, setParsedContent] = useState(null);
   const [loading, setLoading] = useState(true);
+
   const [answers, setAnswers] = useState({});
   const [feedback, setFeedback] = useState({});
+  const [courseData, setCourseData] = useState([]);
+  const [levelProgress, setLevelProgress] = useState({});
+  const [lastLessonInLevel, setLastLessonInLevel] = useState(false);
+  const [allCorrect, setAllCorrect] = useState(false);
 
-  // Fetch lesson when `id` changes
+  const exerciseRefs = useRef({});
+  const submitBtnRef = useRef(null);
+
+ 
+  useEffect(() => {
+    const getCourseTree = async () => {
+      try {
+        const res = await fetchLessons();
+        setCourseData(res.courseData || []);
+      } catch (err) {
+        console.error('Error fetching course tree:', err);
+      }
+    };
+    getCourseTree();
+  }, []);
+
+
   useEffect(() => {
     let mounted = true;
     const getLesson = async () => {
       setLoading(true);
       try {
         const data = await fetchLessonById(id);
-
-        let parsed = null;
-        try {
-          parsed =
-            typeof data.content === 'string' ? JSON.parse(data.content) : data.content;
-        } catch (err) {
-          console.error('Failed to parse lesson content JSON:', err);
-        }
-
+        let parsed = typeof data.content === 'string' ? JSON.parse(data.content) : data.content;
         if (!mounted) return;
+
         setLesson(data);
         setParsedContent(parsed);
-        // reset answers/feedback when new lesson loads
-        setAnswers({});
-        setFeedback({});
+
+        if (levelProgress[data.id]) {
+          setAnswers(levelProgress[data.id].answers);
+          setFeedback(levelProgress[data.id].feedback);
+        } else {
+          setAnswers({});
+          setFeedback({});
+        }
+
+        const levelLessons = courseData.find(l => l.level === data.level)?.skills || [];
+        setLastLessonInLevel(levelLessons[levelLessons.length - 1]?.id === data.id);
+
+        setAllCorrect(false);
       } catch (err) {
         console.error('Error fetching lesson:', err);
         if (!mounted) return;
         setLesson(null);
         setParsedContent(null);
+        setLastLessonInLevel(false);
       } finally {
         if (!mounted) return;
         setLoading(false);
       }
     };
     getLesson();
-    return () => {
-      mounted = false;
-    };
-  }, [id]);
+    return () => { mounted = false; };
+  }, [id, courseData, levelProgress]);
+
+
+useEffect(() => {
+  if (!parsedContent?.exercises) return;
+
+  const allCorrectNow = parsedContent.exercises.every((ex, idx) => {
+    const ans = answers[idx];
+
+    if (ex.type === 'multiple_choice') {
+      return ans === ex.answer;
+    }
+
+    if (ex.type === 'fill_in_the_blank') {
+      return ans?.trim().toLowerCase() === ex.answer.toLowerCase();
+    }
+
+    if (ex.type === 'matching') {
+      return ex.pairs.every((pair, pIdx) => answers[`${idx}-${pIdx}`] === pair[1]);
+    }
+
+    return false;
+  });
+
+  setAllCorrect(allCorrectNow);
+}, [answers, parsedContent]);
+
+
+const getCompletedLessonsSet = () => {
+  const localProgress = JSON.parse(localStorage.getItem('userProgress')) || { lessons_completed: [] };
+  const feedbackProgress = Object.keys(levelProgress)
+    .filter(id => {
+      const f = levelProgress[id]?.feedback || {};
+      return Object.values(f).every(v => v === 'correct');
+    });
+
+  return new Set([...localProgress.lessons_completed, ...feedbackProgress]);
+};
+
 
   if (loading) return <p>Loading lesson...</p>;
   if (!lesson || !parsedContent) return <p>Lesson not found</p>;
 
-  // handlers
-  const handleMCQAnswer = (qIndex, option, correctAnswer) => {
-    setAnswers((prev) => ({ ...prev, [qIndex]: option }));
-    setFeedback((prev) => ({
-      ...prev,
-      [qIndex]: option === correctAnswer ? 'correct' : 'incorrect',
-    }));
+
+  const handleMCQAnswer = (qIndex, option) => {
+    setAnswers(prev => ({ ...prev, [qIndex]: option }));
   };
 
-  const handleFillAnswer = (qIndex, value, correctAnswer) => {
-    setAnswers((prev) => ({ ...prev, [qIndex]: value }));
-    setFeedback((prev) => ({
-      ...prev,
-      [qIndex]:
-        value.trim().toLowerCase() === correctAnswer.toLowerCase() ? 'correct' : 'incorrect',
-    }));
+  const handleFillAnswer = (qIndex, value) => {
+    setAnswers(prev => ({ ...prev, [qIndex]: value }));
   };
 
-  // navigation: use the same route pattern your App uses.
-  // If your App route is "/lesson/:id" use "/lesson/". If it's "/lessons/:id" change accordingly.
-  const currentId = parseInt(id, 10);
-  const prevLessonId = currentId > 1 ? currentId - 1 : null;
-  const nextLessonId = currentId + 1; // assumes IDs are continuous; you can enhance to validate via backend
+const handleSubmitAnswers = () => {
+  const newFeedback = {};
+  parsedContent.exercises.forEach((ex, idx) => {
+  let isCorrect = false;
+
+  if (ex.type === 'multiple_choice') {
+    const value = answers[idx] || '';
+    isCorrect = value === ex.answer;
+  } else if (ex.type === 'fill_in_the_blank' && typeof ex.answer === 'string') {
+    const value = answers[idx] || '';
+    isCorrect = value.trim().toLowerCase() === ex.answer.toLowerCase();
+  } else if (ex.type === 'matching') {
+
+    isCorrect = ex.pairs.every((pair, pIdx) => answers[`${idx}-${pIdx}`] === pair[1]);
+  }
+
+  newFeedback[idx] = isCorrect ? 'correct' : 'incorrect';
+});
+
+  setFeedback(newFeedback);
+  setLevelProgress(prev => ({ ...prev, [lesson.id]: { answers, feedback: newFeedback } }));
+
+
+const allCorrectNow = Object.values(newFeedback).every(v => v === 'correct');
+if (allCorrectNow) {
+  const userProgress = JSON.parse(localStorage.getItem('userProgress')) || {};
+  const completed = new Set(userProgress.lessons_completed || []);
+  completed.add(lesson.id);
+  localStorage.setItem('userProgress', JSON.stringify({
+    ...userProgress,
+    lessons_completed: Array.from(completed),
+  }));
+}
+
+
+  const firstIncorrect = Object.entries(newFeedback).find(([_, v]) => v === 'incorrect');
+  if (firstIncorrect) {
+    const idx = parseInt(firstIncorrect[0], 10);
+    exerciseRefs.current[idx]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } else {
+
+    submitBtnRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+};
+
+
+const handleFinishLevel = async () => {
+  if (!lesson) return;
+
+  const levelLessons = courseData.find(l => l.level === lesson.level)?.skills || [];
+
+
+  const completedLessonsSet = getCompletedLessonsSet();
+  levelLessons.forEach(l => completedLessonsSet.add(l.id));
+
+  try {
+    const userId = JSON.parse(localStorage.getItem('user')).id;
+    const updatedLessons = Array.from(completedLessonsSet);
+
+    const res = await getUserProgress(userId);
+    const progress = res.data || { current_level: 1, lessons_completed: [] };
+
+    const newLevel =
+      lesson.level === progress.current_level ? progress.current_level + 1 : progress.current_level;
+
+    await updateUserProgress({
+      user_id: userId,
+      current_level: newLevel,
+      lessons_completed: updatedLessons,
+    });
+
+    localStorage.removeItem('userProgress');
+
+    navigate(`/lesson-complete`, { state: { level: lesson.level } });
+  } catch (err) {
+    console.error('Error finishing level:', err);
+    alert('Failed to finish level. Try again.');
+  }
+};
+
+
+
+  const levelLessons = courseData.find(l => l.level === lesson.level)?.skills || [];
+  const currentIndex = levelLessons.findIndex(l => l.id === lesson.id);
+  const prevLessonId = currentIndex > 0 ? levelLessons[currentIndex - 1].id : null;
+  const nextLessonId = currentIndex < levelLessons.length - 1 ? levelLessons[currentIndex + 1].id : null;
 
   const goToLesson = (lessonId) => {
-    // clear state right away to avoid showing old content while fetching
+    setLevelProgress(prev => ({ ...prev, [lesson.id]: { answers, feedback } }));
     setLesson(null);
     setParsedContent(null);
     setAnswers({});
     setFeedback({});
+    setAllCorrect(false);
     setLoading(true);
-
-    // IMPORTANT: use the same route path you registered in App.jsx
-    // Most examples used "/lesson/:id" (singular). If your app used "/lessons/:id" change this string.
     navigate(`/lesson/${lessonId}`);
   };
 
+
+
+
+
   return (
     <div className="lesson-page">
+        <div className="back-to-lessons-container">
+          <button 
+            className="back-to-lessons-btn" 
+            onClick={() => navigate('/lesson')}
+          >
+            <FaArrowLeft /> Back to Lessons
+          </button>
+        </div>
+
       <div className="lesson-container">
         <div className="lesson-header">
           <h1 className="lesson-title">{lesson.title}</h1>
@@ -110,124 +254,143 @@ export default function LessonPage() {
         </div>
 
         <div className="lesson-content">
-          {/* Instructions */}
           {parsedContent.instructions?.length > 0 && (
             <div className="lesson-section instructions-container">
-              <h2>
-                <FaClipboardList /> Instructions
-              </h2>
-              <ul>
-                {parsedContent.instructions.map((inst, idx) => (
-                  <li key={idx}>{inst}</li>
-                ))}
-              </ul>
+              <h2><FaClipboardList /> Instructions</h2>
+              <ul>{parsedContent.instructions.map((inst, idx) => <li key={idx}>{inst}</li>)}</ul>
             </div>
           )}
 
-          {/* Audio */}
           {parsedContent.audio_url && (
             <div className="lesson-section audio-container">
-              <h2>
-                <FaHeadphones /> Listening Practice
-              </h2>
+              <h2><FaHeadphones /> Listening Practice</h2>
               <audio controls>
                 <source src={parsedContent.audio_url} type="audio/mpeg" />
               </audio>
             </div>
           )}
 
-          {/* Transcript */}
           {parsedContent.transcript && (
             <div className="lesson-section transcript-container">
-              <h2>
-                <FaBookOpen /> Transcript
-              </h2>
+              <h2><FaBookOpen /> Transcript</h2>
               <pre>{parsedContent.transcript}</pre>
             </div>
           )}
 
-          {/* Vocabulary */}
           {parsedContent.vocabulary?.length > 0 && (
             <div className="lesson-section vocabulary-container">
-              <h2>
-                <FaBookOpen /> Vocabulary
-              </h2>
+              <h2><FaBookOpen /> Vocabulary</h2>
               <ul>
                 {parsedContent.vocabulary.map((v, idx) => (
-                  <li key={idx}>
-                    <strong>{v.word}:</strong> {v.meaning}
-                  </li>
+                  <li key={idx}><strong>{v.word}:</strong> {v.meaning}</li>
                 ))}
               </ul>
             </div>
           )}
 
-          {/* Exercises */}
           {parsedContent.exercises?.length > 0 && (
             <div className="lesson-section exercises-container">
-              <h2>
-                <FaClipboardList /> Exercises
-              </h2>
+              <h2><FaClipboardList /> Exercises</h2>
               {parsedContent.exercises.map((ex, idx) => (
-                <div key={idx} className="exercise">
+                <div key={idx} className="exercise" ref={el => exerciseRefs.current[idx] = el}>
                   <p>{ex.question}</p>
 
-                  {ex.type === 'multiple_choice' && (
-                    <div>
-                      {ex.options?.map((opt, oIdx) => (
-                        <button
-                          key={oIdx}
-                          onClick={() => handleMCQAnswer(idx, opt, ex.answer)}
-                          className={`option-btn ${
-                            feedback[idx] === 'correct' && answers[idx] === opt
-                              ? 'correct'
-                              : feedback[idx] === 'incorrect' && answers[idx] === opt
-                              ? 'incorrect'
-                              : ''
-                          }`}
-                        >
-                          {opt}
-                        </button>
-                      ))}
+                 {ex.type === 'multiple_choice' && (
+                    <div> 
+                      {ex.options?.map((opt, oIdx) => {
+                        const isSelected = answers[idx] === opt; 
+                        const isCorrect = feedback[idx] === 'correct' && isSelected;
+                        const isIncorrect = feedback[idx] === 'incorrect' && isSelected;
+
+                        return (
+                          <button 
+                            key={oIdx}
+                            onClick={() => handleMCQAnswer(idx, opt)}
+                            className={`option-btn 
+                              ${isSelected ? 'selected' : ''} 
+                              ${isCorrect ? 'correct' : ''} 
+                              ${isIncorrect ? 'incorrect' : ''}`}
+                          >
+                            {opt}
+                          </button>
+                        );
+                      })}
                     </div>
                   )}
 
+
                   {ex.type === 'fill_in_the_blank' && (
-                    <div>
+                    <div className="fill-blank-container">
                       <input
                         type="text"
                         value={answers[idx] || ''}
                         placeholder="Type your answer..."
-                        onChange={(e) => handleFillAnswer(idx, e.target.value, ex.answer)}
+                        onChange={(e) => handleFillAnswer(idx, e.target.value)}
                       />
-                      {feedback[idx] && (
-                        <span className={`feedback ${feedback[idx]}`}>
-                          {feedback[idx] === 'correct' ? <FaCheck /> : <FaTimes />}
-                        </span>
-                      )}
                     </div>
+                  )}
+                  {ex.type === 'matching' && (
+                    <div className="matching-container">
+                      {ex.pairs.map((pair, pIdx) => {
+                        const key = `${idx}-${pIdx}`;
+                        const selected = answers[key] || '';
+
+                        return (
+                          <div key={pIdx} className="matching-pair">
+                            <span className="match-word">{pair[0]}</span>
+                            <select
+                              value={selected}
+                              onChange={(e) => {
+                                const newAnswers = { ...answers, [key]: e.target.value };
+                                setAnswers(newAnswers);
+
+                                const allPairsCorrect = ex.pairs.every((p, i) => newAnswers[`${idx}-${i}`] === p[1]);
+                                setFeedback(prev => ({ ...prev, [idx]: allPairsCorrect ? 'correct' : 'incorrect' }));
+                              }}
+                            >
+                              <option value="">Select meaning</option>
+                              {ex.pairs.map((p, oIdx) => (
+                                <option key={oIdx} value={p[1]}>
+                                  {p[1]}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+
+
+                  
+
+                  {feedback[idx] && (
+                    <span className={`feedback ${feedback[idx]}`}>
+                      {feedback[idx] === 'correct' ? <FaCheck /> : <FaTimes />}
+                    </span>
                   )}
                 </div>
               ))}
+
+             <div className="submit-answers-container" ref={submitBtnRef}>
+                <button className="submit-answers-btn" onClick={handleSubmitAnswers}>
+                  Submit Answers
+                </button>
+              </div>
+
             </div>
           )}
 
-          {/* Tips */}
           {parsedContent.tips?.length > 0 && (
             <div className="lesson-section tips-container">
-              <h2>
-                <FaLightbulb /> Tips
-              </h2>
-              <ul>
-                {parsedContent.tips.map((tip, idx) => (
-                  <li key={idx}>{tip}</li>
-                ))}
-              </ul>
+              <h2><FaLightbulb /> Tips</h2>
+              <ul>{parsedContent.tips.map((tip, idx) => <li key={idx}>{tip}</li>)}</ul>
             </div>
           )}
         </div>
 
-        {/* Navigation Buttons */}
+ 
         <div className="lesson-navigation">
           {prevLessonId ? (
             <button className="nav-button prev" onClick={() => goToLesson(prevLessonId)}>
@@ -239,9 +402,19 @@ export default function LessonPage() {
             </button>
           )}
 
-          <button className="nav-button next" onClick={() => goToLesson(nextLessonId)}>
-            Next Lesson <FaArrowRight />
-          </button>
+          {lastLessonInLevel ? (
+            <button className="nav-button finish" onClick={handleFinishLevel}>
+              Finish Level
+            </button>
+          ) : (
+            <button
+              className={`nav-button next ${!allCorrect ? 'disabled' : ''}`}
+              onClick={() => allCorrect && goToLesson(nextLessonId)}
+              disabled={!allCorrect}
+            >
+              Next Lesson <FaArrowRight />
+            </button>
+          )}
         </div>
       </div>
     </div>
