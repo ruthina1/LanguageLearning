@@ -1,16 +1,17 @@
-// frontend/src/services/api.js
 import axios from "axios";
 
 const api = axios.create({
   baseURL: "http://localhost:5000/api",
 });
 
-// Add request interceptor to include auth token automatically
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log('🔐 Adding token to request:', config.url);
+    } else {
+      console.log('🔐 No token found for request:', config.url);
     }
     return config;
   },
@@ -73,13 +74,10 @@ verifyToken: async (token) => {
   }
 }}
 
-// Progress API
-
-
 
 // Lessons API
 export const lessonsAPI = {
-  getCourseTree: () => api.get('/lessons/course-tree'), // <--- matches backend
+  getCourseTree: () => api.get('/lessons/course-tree'), 
   getLessons: (params) => api.get('/lessons', { params }),
   getLesson: (id) => api.get(`/lessons/${id}`),
   completeLesson: (id, data) => api.post(`/lessons/${id}/complete`, data),
@@ -89,10 +87,10 @@ export const lessonsAPI = {
 export const fetchLessons = async () => {
   try {
     const res = await axios.get('http://localhost:5000/api/lessons');
-    return res.data; // <-- must be { courseData: [...] }
+    return res.data; 
   } catch (err) {
     console.error('Error fetching lessons from API:', err);
-    return { courseData: [] }; // fallback to empty array
+    return { courseData: [] }; 
   }
 };
 
@@ -124,67 +122,63 @@ export const aiTutorAPI = {
 
 
 
-// Community API
+// ---------------- COMMUNITY API ----------------
+// ---------------- COMMUNITY API ----------------
 export const communityAPI = {
   getPosts: async (type = null) => {
     try {
-      const url = type ? `/community/posts/${type}` : '/community/posts';
-      const res = await api.get(url);
-      return { success: true, posts: res.data.posts };
+      const res = await api.get('/community', { params: { type } });
+      return res.data; 
     } catch (err) {
-      return { 
-        success: false, 
-        error: err.response?.data?.error || 'Failed to fetch posts',
-        posts: [] 
-      };
+      return []; 
     }
   },
 
-  createPost: async (postData) => {
+  createPost: async (data) => {
     try {
-      const res = await api.post('/community/posts', postData);
-      return { success: true, post: res.data.post };
+      const res = await api.post('/community', data);
+      return res.data;
     } catch (err) {
-      return { 
-        success: false, 
-        error: err.response?.data?.error || 'Failed to create post' 
-      };
+      return { success: false, error: err.response?.data?.error || "Post creation failed" };
     }
   },
-
-  likePost: async (postId) => {
-    try {
-      const res = await api.post(`/community/posts/${postId}/like`);
-      return { success: true, liked: res.data.liked };
-    } catch (err) {
-      return { 
-        success: false, 
-        error: err.response?.data?.error || 'Failed to toggle like' 
-      };
-    }
-  },
+likePost: async (postId) => {
+  try {
+    const res = await api.post(`/community/${postId}/like`);
+    return res.data;
+  } catch (err) {
+    return { 
+      success: false, 
+      error: err.response?.data?.error || "Like failed",
+      liked: false 
+    };
+  }
+},
 
   addComment: async (postId, content) => {
     try {
-      const res = await api.post(`/community/posts/${postId}/comment`, { content });
-      return { success: true, comment: res.data.comment };
+      const res = await api.post(`/community/${postId}/comment`, { content });
+      return res.data;
     } catch (err) {
-      return { 
-        success: false, 
-        error: err.response?.data?.error || 'Failed to add comment' 
-      };
+      return { success: false, error: err.response?.data?.error || "Comment failed" };
     }
   },
 
   getStats: async () => {
     try {
       const res = await api.get('/community/stats');
-      return { success: true, stats: res.data.stats };
+      return res.data;
     } catch (err) {
-      return { 
-        success: false, 
-        error: err.response?.data?.error || 'Failed to fetch stats' 
-      };
+      return { success: false, error: "Failed to fetch stats" };
+    }
+  },
+
+ getUserStats: async () => {  
+    try {
+      const res = await api.get('/community/user-stats');
+      return res.data;
+    } catch (err) {
+      return { success: false, error: "Failed to fetch user stats" };
     }
   }
 };
