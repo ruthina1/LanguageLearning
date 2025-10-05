@@ -1,4 +1,4 @@
-// backend/controllers/authController.js
+
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import User from '../models/User.js';
@@ -6,13 +6,11 @@ import pool from '../config/db.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'secretKey';
 
-// Register
 
 export const register = async (req, res) => {
   try {
     const { email, username, password, confirm_password, native_language, target_language } = req.body;
 
-    // Validation...
     if (!email || !username || !password || !confirm_password) {
       return res.status(400).json({ error: 'All input fields are required' });
     }
@@ -23,13 +21,11 @@ export const register = async (req, res) => {
       return res.status(400).json({ error: 'Password must be at least 6 characters' });
     }
 
-    // Check if user exists
     const existingUser = await User.findByUsername(username);
     if (existingUser) {
       return res.status(400).json({ error: 'User already exists' });
     }
 
-    // Create new user
     const user = await User.create({
       email,
       username,
@@ -38,7 +34,7 @@ export const register = async (req, res) => {
       target_language
     });
 
-    // Generate token
+
     const token = jwt.sign(
       { userId: user.id, username: user.username },
       process.env.JWT_SECRET || 'secretKey',
@@ -57,19 +53,18 @@ export const register = async (req, res) => {
   }
 };
 
-// Login 
 export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
     if (!username || !password) {
       return res.status(400).json({ 
-        success: false,  // Add this
+        success: false,  
         error: 'Username and password are required' 
       });
     }
 
-    // Query using pool.query
+
     const [rows] = await pool.query(
       `SELECT id, email, username, password_hash, display_name, avatar_url, 
               native_language, target_language, level, total_xp, current_streak, best_streak
@@ -80,32 +75,32 @@ export const login = async (req, res) => {
 
     if (rows.length === 0) {
       return res.status(401).json({ 
-        success: false,  // Add this
+        success: false, 
         error: 'Invalid credentials' 
       });
     }
 
     const user = rows[0];
 
-    // Compare password
+
     const isValidPassword = await bcrypt.compare(password, user.password_hash);
 
     if (!isValidPassword) {
       return res.status(401).json({ 
-        success: false,  // Add this
+        success: false, 
         error: 'Invalid credentials' 
       });
     }
 
-    // Generate token
+
     const token = jwt.sign(
       { userId: user.id, username: user.username },
-      process.env.JWT_SECRET, // Use environment variable
+      process.env.JWT_SECRET, 
       { expiresIn: '24h' }
     );
 
     res.json({
-      success: true,  // Add this
+      success: true,  
       message: 'Login successful',
       user: {
         id: user.id,
@@ -126,39 +121,77 @@ export const login = async (req, res) => {
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ 
-      success: false,  // Add this
+      success: false,  
       error: 'Internal server error: ' + error.message 
     });
   }
 };
-// --- TOKEN VERIFICATION MIDDLEWARE ---
+
 export const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1];
-  
-  if (!token) {
-    return res.status(401).json({ error: 'No token provided' });
-  }
+  const authHeader = req.headers['authorization'];
+  if (!authHeader) return res.status(401).json({ message: "No token provided" });
+
+  const token = authHeader.split(" ")[1]; 
+  if (!token) return res.status(401).json({ message: "Malformed token" });
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // This should include the user id
+    req.user = decoded;
     next();
-  } catch (error) {
-    return res.status(401).json({ error: 'Invalid token' });
+  } catch (err) {
+    console.error("Verify token error:", err);
+    res.status(403).json({ message: "Invalid token" });
   }
 };
 
 
-// --- TOKEN VERIFICATION CONTROLLER ---
-export const verifyTokenController = (req, res) => {
-  res.json({ success: true, message: 'Token is valid', userId: req.userId });
+export const verifyTokenController = async (req, res) => {
+  try {
+    const userId = req.user.userId; 
+
+
+    const [rows] = await pool.query(
+      `SELECT id, email, username, display_name, avatar_url, 
+              native_language, target_language, level, total_xp, 
+              current_streak, best_streak
+       FROM users WHERE id = ?`,
+      [userId]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+
+    const user = rows[0];
+
+    res.json({
+      success: true,
+      message: 'Token is valid',
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        display_name: user.display_name,
+        avatar: user.avatar_url,
+        native_language: user.native_language,
+        target_language: user.target_language,
+        level: user.level,
+        xp: user.total_xp,
+        streak: user.current_streak,
+        best_streak: user.best_streak,
+      },
+    });
+  } catch (error) {
+    console.error('Verify token error:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
 };
 
 
 export const updateLanguagePreferences = async (req, res) => {
   try {
     const { native_language, target_language } = req.body;
-    const userId = req.userId; // Assuming you have auth middleware that sets req.userId
+    const userId = req.userId; 
 
     if (!native_language || !target_language) {
       return res.status(400).json({ error: 'Both language preferences are required' });
@@ -182,10 +215,10 @@ export const updateLanguagePreferences = async (req, res) => {
   }
 };
 
-// Add a method to get user profile with language preferences
+
 export const getProfile = async (req, res) => {
   try {
-    const userId = req.userId; // Assuming you have auth middleware that sets req.userId
+    const userId = req.userId; 
 
     const user = await User.findById(userId);
     
