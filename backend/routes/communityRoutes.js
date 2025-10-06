@@ -7,7 +7,7 @@ import {
   getStats,
   getUserStats  
 } from '../controllers/communityController.js';
-import { authenticateToken } from '../middleware/authMiddleware.js';
+import { authenticateToken } from '../middleware/chatm.js';
 
 const router = express.Router();
 
