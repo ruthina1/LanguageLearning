@@ -4,14 +4,12 @@ const api = axios.create({
   baseURL: "http://localhost:5000/api",
 });
 
+// Add request interceptor to include auth token automatically
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log('🔐 Adding token to request:', config.url);
-    } else {
-      console.log('🔐 No token found for request:', config.url);
     }
     return config;
   },
@@ -19,7 +17,6 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
 export const authAPI = {
   register: async (userData) => {
     try {
@@ -75,9 +72,9 @@ verifyToken: async (token) => {
 }}
 
 
-// Lessons API
+// Lessons API//
 export const lessonsAPI = {
-  getCourseTree: () => api.get('/lessons/course-tree'), 
+  getCourseTree: () => api.get('/lessons/lesson'), // <--- matches backend
   getLessons: (params) => api.get('/lessons', { params }),
   getLesson: (id) => api.get(`/lessons/${id}`),
   completeLesson: (id, data) => api.post(`/lessons/${id}/complete`, data),
@@ -87,10 +84,10 @@ export const lessonsAPI = {
 export const fetchLessons = async () => {
   try {
     const res = await axios.get('http://localhost:5000/api/lessons');
-    return res.data; 
+    return res.data; // <-- must be { courseData: [...] }
   } catch (err) {
     console.error('Error fetching lessons from API:', err);
-    return { courseData: [] }; 
+    return { courseData: [] }; // fallback to empty array
   }
 };
 

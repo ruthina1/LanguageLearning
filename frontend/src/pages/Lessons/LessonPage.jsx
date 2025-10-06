@@ -31,7 +31,6 @@ export default function LessonPage() {
   const exerciseRefs = useRef({});
   const submitBtnRef = useRef(null);
 
- 
   useEffect(() => {
     const getCourseTree = async () => {
       try {
@@ -43,7 +42,6 @@ export default function LessonPage() {
     };
     getCourseTree();
   }, []);
-
 
   useEffect(() => {
     let mounted = true;
@@ -84,47 +82,46 @@ export default function LessonPage() {
     return () => { mounted = false; };
   }, [id, courseData, levelProgress]);
 
+  useEffect(() => {
+    if (!parsedContent?.exercises) return;
 
-useEffect(() => {
-  if (!parsedContent?.exercises) return;
+    const allCorrectNow = parsedContent.exercises.every((ex, idx) => {
+      const ans = answers[idx];
 
-  const allCorrectNow = parsedContent.exercises.every((ex, idx) => {
-    const ans = answers[idx];
+      if (ex.type === 'multiple_choice') {
+        return ans === ex.answer;
+      }
 
-    if (ex.type === 'multiple_choice') {
-      return ans === ex.answer;
-    }
+      // FIXED: Check for both possible type names
+      if (ex.type === 'fill_in_the_blank' || ex.type === 'fill_in_blank') {
+        return ans?.trim().toLowerCase() === ex.answer.toLowerCase();
+      }
 
-    if (ex.type === 'fill_in_the_blank') {
-      return ans?.trim().toLowerCase() === ex.answer.toLowerCase();
-    }
+      if (ex.type === 'matching') {
+        // Handle both array and object formats for pairs
+        const pairs = Array.isArray(ex.pairs) ? ex.pairs : Object.entries(ex.pairs || {});
+        return pairs.every((pair, pIdx) => answers[`${idx}-${pIdx}`] === pair[1]);
+      }
 
-    if (ex.type === 'matching') {
-      return ex.pairs.every((pair, pIdx) => answers[`${idx}-${pIdx}`] === pair[1]);
-    }
-
-    return false;
-  });
-
-  setAllCorrect(allCorrectNow);
-}, [answers, parsedContent]);
-
-
-const getCompletedLessonsSet = () => {
-  const localProgress = JSON.parse(localStorage.getItem('userProgress')) || { lessons_completed: [] };
-  const feedbackProgress = Object.keys(levelProgress)
-    .filter(id => {
-      const f = levelProgress[id]?.feedback || {};
-      return Object.values(f).every(v => v === 'correct');
+      return false;
     });
 
-  return new Set([...localProgress.lessons_completed, ...feedbackProgress]);
-};
+    setAllCorrect(allCorrectNow);
+  }, [answers, parsedContent]);
 
+  const getCompletedLessonsSet = () => {
+    const localProgress = JSON.parse(localStorage.getItem('userProgress')) || { lessons_completed: [] };
+    const feedbackProgress = Object.keys(levelProgress)
+      .filter(id => {
+        const f = levelProgress[id]?.feedback || {};
+        return Object.values(f).every(v => v === 'correct');
+      });
+
+    return new Set([...localProgress.lessons_completed, ...feedbackProgress]);
+  };
 
   if (loading) return <p>Loading lesson...</p>;
   if (!lesson || !parsedContent) return <p>Lesson not found</p>;
-
 
   const handleMCQAnswer = (qIndex, option) => {
     setAnswers(prev => ({ ...prev, [qIndex]: option }));
@@ -134,87 +131,81 @@ const getCompletedLessonsSet = () => {
     setAnswers(prev => ({ ...prev, [qIndex]: value }));
   };
 
-const handleSubmitAnswers = () => {
-  const newFeedback = {};
-  parsedContent.exercises.forEach((ex, idx) => {
-  let isCorrect = false;
+  const handleSubmitAnswers = () => {
+    const newFeedback = {};
+    parsedContent.exercises.forEach((ex, idx) => {
+      let isCorrect = false;
 
-  if (ex.type === 'multiple_choice') {
-    const value = answers[idx] || '';
-    isCorrect = value === ex.answer;
-  } else if (ex.type === 'fill_in_the_blank' && typeof ex.answer === 'string') {
-    const value = answers[idx] || '';
-    isCorrect = value.trim().toLowerCase() === ex.answer.toLowerCase();
-  } else if (ex.type === 'matching') {
+      if (ex.type === 'multiple_choice') {
+        const value = answers[idx] || '';
+        isCorrect = value === ex.answer;
+      } 
+      // FIXED: Handle both fill_in_blank types
+      else if ((ex.type === 'fill_in_the_blank' || ex.type === 'fill_in_blank') && typeof ex.answer === 'string') {
+        const value = answers[idx] || '';
+        isCorrect = value.trim().toLowerCase() === ex.answer.toLowerCase();
+      } 
+      else if (ex.type === 'matching') {
+        const pairs = Array.isArray(ex.pairs) ? ex.pairs : Object.entries(ex.pairs || {});
+        isCorrect = pairs.every((pair, pIdx) => answers[`${idx}-${pIdx}`] === pair[1]);
+      }
 
-    isCorrect = ex.pairs.every((pair, pIdx) => answers[`${idx}-${pIdx}`] === pair[1]);
-  }
-
-  newFeedback[idx] = isCorrect ? 'correct' : 'incorrect';
-});
-
-  setFeedback(newFeedback);
-  setLevelProgress(prev => ({ ...prev, [lesson.id]: { answers, feedback: newFeedback } }));
-
-
-const allCorrectNow = Object.values(newFeedback).every(v => v === 'correct');
-if (allCorrectNow) {
-  const userProgress = JSON.parse(localStorage.getItem('userProgress')) || {};
-  const completed = new Set(userProgress.lessons_completed || []);
-  completed.add(lesson.id);
-  localStorage.setItem('userProgress', JSON.stringify({
-    ...userProgress,
-    lessons_completed: Array.from(completed),
-  }));
-}
-
-
-  const firstIncorrect = Object.entries(newFeedback).find(([_, v]) => v === 'incorrect');
-  if (firstIncorrect) {
-    const idx = parseInt(firstIncorrect[0], 10);
-    exerciseRefs.current[idx]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  } else {
-
-    submitBtnRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-};
-
-
-const handleFinishLevel = async () => {
-  if (!lesson) return;
-
-  const levelLessons = courseData.find(l => l.level === lesson.level)?.skills || [];
-
-
-  const completedLessonsSet = getCompletedLessonsSet();
-  levelLessons.forEach(l => completedLessonsSet.add(l.id));
-
-  try {
-    const userId = JSON.parse(localStorage.getItem('user')).id;
-    const updatedLessons = Array.from(completedLessonsSet);
-
-    const res = await getUserProgress(userId);
-    const progress = res.data || { current_level: 1, lessons_completed: [] };
-
-    const newLevel =
-      lesson.level === progress.current_level ? progress.current_level + 1 : progress.current_level;
-
-    await updateUserProgress({
-      user_id: userId,
-      current_level: newLevel,
-      lessons_completed: updatedLessons,
+      newFeedback[idx] = isCorrect ? 'correct' : 'incorrect';
     });
 
-    localStorage.removeItem('userProgress');
+    setFeedback(newFeedback);
+    setLevelProgress(prev => ({ ...prev, [lesson.id]: { answers, feedback: newFeedback } }));
 
-    navigate(`/lesson-complete`, { state: { level: lesson.level } });
-  } catch (err) {
-    console.error('Error finishing level:', err);
-    alert('Failed to finish level. Try again.');
-  }
-};
+    const allCorrectNow = Object.values(newFeedback).every(v => v === 'correct');
+    if (allCorrectNow) {
+      const userProgress = JSON.parse(localStorage.getItem('userProgress')) || {};
+      const completed = new Set(userProgress.lessons_completed || []);
+      completed.add(lesson.id);
+      localStorage.setItem('userProgress', JSON.stringify({
+        ...userProgress,
+        lessons_completed: Array.from(completed),
+      }));
+    }
 
+    const firstIncorrect = Object.entries(newFeedback).find(([_, v]) => v === 'incorrect');
+    if (firstIncorrect) {
+      const idx = parseInt(firstIncorrect[0], 10);
+      exerciseRefs.current[idx]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      submitBtnRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
 
+  const handleFinishLevel = async () => {
+    if (!lesson) return;
+
+    const levelLessons = courseData.find(l => l.level === lesson.level)?.skills || [];
+    const completedLessonsSet = getCompletedLessonsSet();
+    levelLessons.forEach(l => completedLessonsSet.add(l.id));
+
+    try {
+      const userId = JSON.parse(localStorage.getItem('user')).id;
+      const updatedLessons = Array.from(completedLessonsSet);
+
+      const res = await getUserProgress(userId);
+      const progress = res.data || { current_level: 1, lessons_completed: [] };
+
+      const newLevel =
+        lesson.level === progress.current_level ? progress.current_level + 1 : progress.current_level;
+
+      await updateUserProgress({
+        user_id: userId,
+        current_level: newLevel,
+        lessons_completed: updatedLessons,
+      });
+
+      localStorage.removeItem('userProgress');
+      navigate(`/lesson-complete`, { state: { level: lesson.level } });
+    } catch (err) {
+      console.error('Error finishing level:', err);
+      alert('Failed to finish level. Try again.');
+    }
+  };
 
   const levelLessons = courseData.find(l => l.level === lesson.level)?.skills || [];
   const currentIndex = levelLessons.findIndex(l => l.id === lesson.id);
@@ -232,20 +223,16 @@ const handleFinishLevel = async () => {
     navigate(`/lesson/${lessonId}`);
   };
 
-
-
-
-
   return (
     <div className="lesson-page">
-        <div className="back-to-lessons-container">
-          <button 
-            className="back-to-lessons-btn" 
-            onClick={() => navigate('/lesson')}
-          >
-            <FaArrowLeft /> Back to Lessons
-          </button>
-        </div>
+      <div className="back-to-lessons-container">
+        <button 
+          className="back-to-lessons-btn" 
+          onClick={() => navigate('/lesson')}
+        >
+          <FaArrowLeft /> Back to Lessons
+        </button>
+      </div>
 
       <div className="lesson-container">
         <div className="lesson-header">
@@ -281,8 +268,19 @@ const handleFinishLevel = async () => {
             <div className="lesson-section vocabulary-container">
               <h2><FaBookOpen /> Vocabulary</h2>
               <ul>
-                {parsedContent.vocabulary.map((v, idx) => (
-                  <li key={idx}><strong>{v.word}:</strong> {v.meaning}</li>
+                {parsedContent.vocabulary.map((word, idx) => (
+                  <li key={idx}><strong>{word}</strong></li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {parsedContent.grammar?.length > 0 && (
+            <div className="lesson-section grammar-container">
+              <h2><FaBookOpen /> Grammar</h2>
+              <ul>
+                {parsedContent.grammar.map((point, idx) => (
+                  <li key={idx}>{point}</li>
                 ))}
               </ul>
             </div>
@@ -295,7 +293,7 @@ const handleFinishLevel = async () => {
                 <div key={idx} className="exercise" ref={el => exerciseRefs.current[idx] = el}>
                   <p>{ex.question}</p>
 
-                 {ex.type === 'multiple_choice' && (
+                  {ex.type === 'multiple_choice' && (
                     <div> 
                       {ex.options?.map((opt, oIdx) => {
                         const isSelected = answers[idx] === opt; 
@@ -318,8 +316,8 @@ const handleFinishLevel = async () => {
                     </div>
                   )}
 
-
-                  {ex.type === 'fill_in_the_blank' && (
+                  {/* FIXED: Handle both fill_in_blank types */}
+                  {(ex.type === 'fill_in_the_blank' || ex.type === 'fill_in_blank') && (
                     <div className="fill-blank-container">
                       <input
                         type="text"
@@ -329,41 +327,44 @@ const handleFinishLevel = async () => {
                       />
                     </div>
                   )}
+
                   {ex.type === 'matching' && (
                     <div className="matching-container">
-                      {ex.pairs.map((pair, pIdx) => {
-                        const key = `${idx}-${pIdx}`;
-                        const selected = answers[key] || '';
+                      {(() => {
+                        // Handle both array and object formats for pairs
+                        const pairs = Array.isArray(ex.pairs) ? ex.pairs : Object.entries(ex.pairs || {});
+                        const meanings = Array.from(new Set(pairs.map(pair => pair[1])));
+                        
+                        return pairs.map((pair, pIdx) => {
+                          const key = `${idx}-${pIdx}`;
+                          const selected = answers[key] || '';
 
-                        return (
-                          <div key={pIdx} className="matching-pair">
-                            <span className="match-word">{pair[0]}</span>
-                            <select
-                              value={selected}
-                              onChange={(e) => {
-                                const newAnswers = { ...answers, [key]: e.target.value };
-                                setAnswers(newAnswers);
+                          return (
+                            <div key={pIdx} className="matching-pair">
+                              <span className="match-word">{pair[0]}</span>
+                              <select
+                                value={selected}
+                                onChange={(e) => {
+                                  const newAnswers = { ...answers, [key]: e.target.value };
+                                  setAnswers(newAnswers);
 
-                                const allPairsCorrect = ex.pairs.every((p, i) => newAnswers[`${idx}-${i}`] === p[1]);
-                                setFeedback(prev => ({ ...prev, [idx]: allPairsCorrect ? 'correct' : 'incorrect' }));
-                              }}
-                            >
-                              <option value="">Select meaning</option>
-                              {ex.pairs.map((p, oIdx) => (
-                                <option key={oIdx} value={p[1]}>
-                                  {p[1]}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                        );
-                      })}
+                                  const allPairsCorrect = pairs.every((p, i) => newAnswers[`${idx}-${i}`] === p[1]);
+                                  setFeedback(prev => ({ ...prev, [idx]: allPairsCorrect ? 'correct' : 'incorrect' }));
+                                }}
+                              >
+                                <option value="">Select meaning</option>
+                                {meanings.map((meaning, oIdx) => (
+                                  <option key={oIdx} value={meaning}>
+                                    {meaning}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          );
+                        });
+                      })()}
                     </div>
                   )}
-
-
-
-                  
 
                   {feedback[idx] && (
                     <span className={`feedback ${feedback[idx]}`}>
@@ -373,12 +374,11 @@ const handleFinishLevel = async () => {
                 </div>
               ))}
 
-             <div className="submit-answers-container" ref={submitBtnRef}>
+              <div className="submit-answers-container" ref={submitBtnRef}>
                 <button className="submit-answers-btn" onClick={handleSubmitAnswers}>
                   Submit Answers
                 </button>
               </div>
-
             </div>
           )}
 
@@ -390,7 +390,6 @@ const handleFinishLevel = async () => {
           )}
         </div>
 
- 
         <div className="lesson-navigation">
           {prevLessonId ? (
             <button className="nav-button prev" onClick={() => goToLesson(prevLessonId)}>
