@@ -4,7 +4,7 @@ const api = axios.create({
   baseURL: "http://localhost:5000/api",
 });
 
-// Add request interceptor to include auth token automatically
+//   interceptor to include auth token automatically
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -72,9 +72,9 @@ verifyToken: async (token) => {
 }}
 
 
-// Lessons API//
+// lessons
 export const lessonsAPI = {
-  getCourseTree: () => api.get('/lessons/lesson'), // <--- matches backend
+  getCourseTree: () => api.get('/lessons/lesson'),
   getLessons: (params) => api.get('/lessons', { params }),
   getLesson: (id) => api.get(`/lessons/${id}`),
   completeLesson: (id, data) => api.post(`/lessons/${id}/complete`, data),
@@ -84,10 +84,10 @@ export const lessonsAPI = {
 export const fetchLessons = async () => {
   try {
     const res = await axios.get('http://localhost:5000/api/lessons');
-    return res.data; // <-- must be { courseData: [...] }
+    return res.data;
   } catch (err) {
     console.error('Error fetching lessons from API:', err);
-    return { courseData: [] }; // fallback to empty array
+    return { courseData: [] }; 
   }
 };
 
@@ -96,12 +96,27 @@ export const fetchLessonById = async (id) => {
   return response.data.lesson;
 };
 
-// Activities API
+// activities
 export const activitiesAPI = {
   getActivities: (params) => api.get('/activities', { params }),
 };
 
-// ---------------- NEW: AI Tutor API ----------------
+
+// dashboard
+export const dashboardAPI = {
+  getDashboardData: () => 
+    api.get('/dashboard'),
+  
+  updateProgress: (progressData) => 
+    api.post('/dashboard/progress', progressData),
+  
+  getPracticeStats: () => 
+    api.get('/dashboard/practice-stats'),
+  
+  getSuggestedLessons: () => 
+    api.get('/dashboard/suggested-lessons')
+};
+// ai tutur
 export const aiTutorAPI = {
   getConversation: async () => {
     const res = await api.get("/aitutor/conversation");
@@ -119,8 +134,7 @@ export const aiTutorAPI = {
 
 
 
-// ---------------- COMMUNITY API ----------------
-// ---------------- COMMUNITY API ----------------
+// community
 export const communityAPI = {
   getPosts: async (type = null) => {
     try {
