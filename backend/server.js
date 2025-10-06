@@ -5,15 +5,13 @@ import bodyParser from 'body-parser';
 import corsOptions from './config/corsConfig.js';
 
 
-
-
 import authRoutes from "./routes/authRoutes.js";
-import dashboardRoutes from "./routes/dashboardRoutes.js";
 import lessonRoutes from "./routes/lessonRoutes.js";
 import progressRoutes from "./routes/progressRoutes.js";
 import activitiesRoutes from './routes/activitiesRoutes.js';
 import communityRoutes from './routes/communityRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
 
 
 
@@ -26,7 +24,7 @@ app.use(cors(corsOptions));
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/dashboard", dashboardRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/lessons', lessonRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/activities', activitiesRoutes);
