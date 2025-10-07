@@ -197,4 +197,14 @@ likePost: async (postId) => {
 export const getUserProgress = (userId) => api.get(`/progress/${userId}`);
 export const updateUserProgress = (data) => api.post("/progress/update", data);
 export const addWeeklyProgress = (data) => api.post("/progress/weekly", data);
+
+
+
+// Profile API calls
+
+export const profileAPI = {
+  getProfile: () => api.get('/profile'),
+  updateProfile: (profileData) => api.put('/profile', profileData),
+  updateGoals: (goalsData) => api.put('/profile/goals', goalsData),
+};
 export default api;

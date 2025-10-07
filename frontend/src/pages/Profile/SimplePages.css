@@ -1,0 +1,42 @@
+.simple-page {
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+  background: #f9fafc;
+  min-height: 100vh;
+}
+
+.simple-page h2 {
+  margin-bottom: 1rem;
+}
+
+.simple-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 400px;
+}
+
+.simple-form input {
+  padding: 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.simple-form button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.7rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.simple-form button:hover {
+  background: #0056b3;
+}
+
+ul {
+  margin-top: 1rem;
+  list-style: disc;
+  padding-left: 1.5rem;
+}
