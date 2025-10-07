@@ -12,6 +12,7 @@ import activitiesRoutes from './routes/activitiesRoutes.js';
 import communityRoutes from './routes/communityRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
+import profileRoutes from './routes/profileRoutes.js';
 
 
 
@@ -30,6 +31,7 @@ app.use('/api/progress', progressRoutes);
 app.use('/api/activities', activitiesRoutes);
 app.use('/api/community', communityRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/profile', profileRoutes);
 
 
 
