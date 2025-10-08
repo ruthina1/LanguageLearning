@@ -15,8 +15,6 @@
   gap: 12px;
 }
 
-/* Rest of your existing ChatWindow.css remains the same */
-
 .empty-state {
   text-align: center;
   color: #666;
