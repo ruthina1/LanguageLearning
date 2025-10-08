@@ -23,7 +23,7 @@
 }
 
 .simple-form button {
-  background: #007bff;
+  background:#008080;
   color: white;
   border: none;
   padding: 0.7rem;
@@ -32,7 +32,7 @@
 }
 
 .simple-form button:hover {
-  background: #0056b3;
+  background:#006666;
 }
 
 ul {
