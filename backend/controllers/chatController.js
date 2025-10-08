@@ -1,4 +1,3 @@
-// backend/controllers/chatController.js
 import pool from '../config/db.js';
 import { findBestResponse } from '../models/Chat.js';
 
