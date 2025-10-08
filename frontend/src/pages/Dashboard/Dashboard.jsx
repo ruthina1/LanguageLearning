@@ -194,7 +194,6 @@ export default function Dashboard() {
             </div>
           </section>
 
-          {/* 🔹 Recommended Lessons Section */}
           <section className="suggested-lessons">
             <h2><FaLightbulb /> Recommended for You</h2>
             {lessonsLoading ? (
