@@ -82,7 +82,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: linear-gradient(135deg, #43cea2 0%, #38ef7d 100%);
+  background:  linear-gradient(135deg, #008080 0%, #006666 100%);
   color: white;
   padding: 12px 25px;
   border-radius: 50px;
@@ -170,7 +170,7 @@
 }
 
 .primary-btn {
-  background: linear-gradient(135deg, #43cea2 0%, #38ef7d 100%);
+  background: linear-gradient(135deg, #008080 0%, #006666 100%);
   color: white;
   border: none;
   padding: 16px 32px;
@@ -193,8 +193,8 @@
 
 .secondary-btn {
   background: transparent;
-  color: #43cea2;
-  border: 2px solid #43cea2;
+  color:  #008080;
+  border: 2px solid #008080;
   padding: 14px 32px;
   font-size: 1rem;
   border-radius: 50px;
