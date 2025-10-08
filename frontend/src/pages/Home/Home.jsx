@@ -110,6 +110,28 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [features.length]);
 
+  // Add this to your Home component, right before the return statement
+useEffect(() => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  });
+
+  // Observe all animatable elements
+  const animatableElements = document.querySelectorAll(
+    '.feature-card, .practice-type-card, .step, .testimonial-card'
+  );
+  
+  animatableElements.forEach(el => observer.observe(el));
+
+  return () => observer.disconnect();
+}, []);
   const handleGetStarted = () => {
     if (user) {
       navigate('/dashboard');
@@ -139,9 +161,9 @@ export default function Home() {
               LinguaLearn combines cutting-edge artificial intelligence with proven language learning methodologies 
               to deliver personalized English education that adapts to your unique learning style, pace, and goals.
             </p>
-            <div className="hero-stats">
+            <div className="hero-statss">
               {stats.map((stat, index) => (
-                <div key={index} className="stat-item">
+                <div key={index} className="stat-itemm">
                   <div className="stat-number">{stat.number}</div>
                   <div className="stat-label">{stat.label}</div>
                 </div>
