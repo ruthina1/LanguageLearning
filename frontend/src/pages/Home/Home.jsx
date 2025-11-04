@@ -7,7 +7,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
   FaMicrophone, FaChartLine, FaTrophy, FaUsers, FaGlobe,
   FaComments, FaPenAlt, FaCheckCircle, FaArrowRight, FaQuoteLeft,
-  FaRocket, FaPlay, FaGraduationCap, FaShieldAlt, FaInfinity, FaHeadphones
+  FaRocket, FaPlay, FaGraduationCap, FaShieldAlt, FaInfinity, FaHeadphones,
+  FaStar, FaChevronRight
 } from 'react-icons/fa';
 import './Home.css';
 
@@ -32,17 +33,23 @@ export default function Home() {
     {
       icon: FaMicrophone,
       title: 'AI-Powered Pronunciation',
-      description: 'Real-time voice recognition technology provides instant feedback'
+      description: 'Real-time voice recognition technology provides instant feedback',
+      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&q=80',
+      subtitle: 'Speak with Confidence'
     },
     {
       icon: FaChartLine,
       title: 'Personalized Learning Path',
-      description: 'Adaptive algorithms create custom lessons based on your progress'
+      description: 'Adaptive algorithms create custom lessons based on your progress',
+      image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=80',
+      subtitle: 'Your Journey, Your Pace'
     },
     {
       icon: FaTrophy,
       title: 'Gamified Experience',
-      description: 'Earn XP, unlock achievements, and climb leaderboards'
+      description: 'Earn XP, unlock achievements, and climb leaderboards',
+      image: 'https://images.unsplash.com/photo-1551033406-611cf9a28f64?w=800&q=80',
+      subtitle: 'Learn While You Play'
     }
   ];
 
@@ -51,25 +58,33 @@ export default function Home() {
       icon: FaMicrophone,
       title: 'Speaking Practice',
       description: 'Master pronunciation with advanced voice recognition',
-      color: '#d4a574'
+      image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&q=80',
+      color: '#d4a574',
+      stats: '10K+ Lessons'
     },
     {
       icon: FaHeadphones,
       title: 'Listening Comprehension',
       description: 'Train your ear with authentic audio content',
-      color: '#b8926a'
+      image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80',
+      color: '#b8926a',
+      stats: '500+ Audio Files'
     },
     {
       icon: FaComments,
       title: 'Conversation Practice',
       description: 'Build confidence in real-life dialogues',
-      color: '#9b7f5a'
+      image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=600&q=80',
+      color: '#9b7f5a',
+      stats: 'Live Sessions'
     },
     {
       icon: FaPenAlt,
       title: 'Writing Excellence',
       description: 'Perfect your writing with intelligent feedback',
-      color: '#8a6f4a'
+      image: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&q=80',
+      color: '#8a6f4a',
+      stats: 'AI Feedback'
     }
   ];
 
@@ -78,19 +93,25 @@ export default function Home() {
       name: 'Maria Rodriguez',
       role: 'Business Professional',
       text: 'LinguaLearn transformed my business communication skills. In 3 months, I went from hesitant to confident in meetings.',
-      avatar: 'MR'
+      image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80',
+      rating: 5,
+      location: 'New York, USA'
     },
     {
       name: 'David Chen',
       role: 'University Student',
       text: 'The personalized practice sessions helped me ace my TOEFL exam. The speaking exercises were incredibly effective!',
-      avatar: 'DC'
+      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80',
+      rating: 5,
+      location: 'London, UK'
     },
     {
       name: 'Sarah Johnson',
       role: 'Travel Enthusiast',
       text: 'Finally I can travel and connect with people authentically. The cultural context in lessons makes all the difference.',
-      avatar: 'SJ'
+      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80',
+      rating: 5,
+      location: 'Sydney, Australia'
     }
   ];
 
@@ -171,25 +192,53 @@ export default function Home() {
       }
     });
 
-    // Feature cards animation - keep visible
-    gsap.utils.toArray('.feature-card').forEach((card, index) => {
-      gsap.set(card, { opacity: 1, y: 0 });
-      gsap.from(card, {
-        scrollTrigger: {
-          trigger: card,
-          start: 'top 85%',
-          toggleActions: 'play none none reverse'
-        },
-        y: 50,
-        opacity: 1,
-        duration: 0.8,
-        delay: index * 0.1,
-        ease: 'power2.out'
+    // Feature showcase animations - Restaurant Gem style
+    gsap.utils.toArray('.feature-showcase-item').forEach((item, index) => {
+      const image = item.querySelector('.feature-image-container');
+      const content = item.querySelector('.feature-content');
+      
+      gsap.set([image, content], { opacity: 1 });
+      
+      const isEven = index % 2 === 0;
+      
+      ScrollTrigger.create({
+        trigger: item,
+        start: 'top 80%',
+        end: 'bottom 20%',
+        onEnter: () => {
+          gsap.fromTo(image, 
+            { 
+              x: isEven ? -100 : 100,
+              opacity: 0,
+              scale: 0.9
+            },
+            {
+              x: 0,
+              opacity: 1,
+              scale: 1,
+              duration: 1.2,
+              ease: 'power3.out'
+            }
+          );
+          gsap.fromTo(content,
+            {
+              x: isEven ? 100 : -100,
+              opacity: 0
+            },
+            {
+              x: 0,
+              opacity: 1,
+              duration: 1.2,
+              delay: 0.2,
+              ease: 'power3.out'
+            }
+          );
+        }
       });
     });
 
-    // Practice cards animation - keep visible
-    gsap.utils.toArray('.practice-type-card').forEach((card, index) => {
+    // Practice cards animation - smooth reveal
+    gsap.utils.toArray('.practice-showcase-card').forEach((card, index) => {
       gsap.set(card, { opacity: 1, y: 0 });
       gsap.from(card, {
         scrollTrigger: {
@@ -197,16 +246,17 @@ export default function Home() {
           start: 'top 85%',
           toggleActions: 'play none none reverse'
         },
-        y: 50,
-        opacity: 1,
-        duration: 0.8,
-        delay: index * 0.1,
-        ease: 'power2.out'
+        y: 80,
+        opacity: 0,
+        scale: 0.95,
+        duration: 1,
+        delay: index * 0.15,
+        ease: 'power3.out'
       });
     });
 
-    // Testimonial cards animation - keep visible
-    gsap.utils.toArray('.testimonial-card').forEach((card, index) => {
+    // Testimonial cards animation - staggered reveal
+    gsap.utils.toArray('.testimonial-showcase-card').forEach((card, index) => {
       gsap.set(card, { opacity: 1, y: 0 });
       gsap.from(card, {
         scrollTrigger: {
@@ -214,11 +264,12 @@ export default function Home() {
           start: 'top 85%',
           toggleActions: 'play none none reverse'
         },
-        y: 50,
-        opacity: 1,
-        duration: 0.8,
+        y: 60,
+        opacity: 0,
+        scale: 0.9,
+        duration: 0.9,
         delay: index * 0.1,
-        ease: 'power2.out'
+        ease: 'power3.out'
       });
     });
 
@@ -328,24 +379,39 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
+            {/* Features Section */}
       <section id="features" className="features-section" data-section="features">
         <div className="section-content">
           <div className="section-header">
             <span className="section-number">[02]</span>
             <h2>Why LinguaLearn<br />Stands Out</h2>
           </div>
-          
-          <div className="features-grid">
+
+          <div className="features-showcase">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <div key={index} className="feature-card">
-                  <div className="feature-icon">
-                    <Icon />
+                <div key={index} className="feature-showcase-item">
+                  <div className={`feature-image-wrapper ${index % 2 === 0 ? 'left' : 'right'}`}>
+                    <div className="feature-image-container">
+                      <img src={feature.image} alt={feature.title} className="feature-image" />
+                      <div className="image-overlay"></div>
+                    </div>
                   </div>
-                  <h3>{feature.title}</h3>
-                  <p>{feature.description}</p>
+                  <div className={`feature-content-wrapper ${index % 2 === 0 ? 'right' : 'left'}`}>
+                    <div className="feature-content">
+                      <div className="feature-number">{String(index + 1).padStart(2, '0')}</div>
+                      <span className="feature-subtitle">{feature.subtitle}</span>
+                      <h3 className="feature-title-large">{feature.title}</h3>
+                      <p className="feature-description-large">{feature.description}</p>
+                      <div className="feature-icon-large">
+                        <Icon />
+                      </div>
+                      <button className="feature-learn-more">
+                        Learn More <FaChevronRight />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               );
             })}
@@ -353,29 +419,36 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Practice Types Section */}
+            {/* Practice Types Section */}
       <section id="practice" className="practice-section" data-section="practice">
         <div className="section-content">
           <div className="section-header">
             <span className="section-number">[03]</span>
             <h2>Comprehensive<br />Learning Experience</h2>
           </div>
-          
-          <div className="practice-grid">
+
+          <div className="practice-showcase">
             {practiceTypes.map((practice, index) => {
               const Icon = practice.icon;
               return (
-                <div key={index} className="practice-type-card">
-                  <div className="practice-icon">
-                    <Icon />
+                <div key={index} className="practice-showcase-card">
+                  <div className="practice-card-image-wrapper">
+                    <img src={practice.image} alt={practice.title} className="practice-card-image" />
+                    <div className="practice-image-overlay"></div>
+                    <div className="practice-icon-overlay">
+                      <Icon />
+                    </div>
                   </div>
-                  <h3>{practice.title}</h3>
-                  <p>{practice.description}</p>
-                  <ul className="practice-benefits">
-                    <li><FaCheckCircle /> Real-time feedback</li>
-                    <li><FaCheckCircle /> Personalized exercises</li>
-                    <li><FaCheckCircle /> Progress tracking</li>
-                  </ul>
+                  <div className="practice-card-content">
+                    <span className="practice-stats">{practice.stats}</span>
+                    <h3 className="practice-card-title">{practice.title}</h3>
+                    <p className="practice-card-description">{practice.description}</p>
+                    <div className="practice-features-list">
+                      <span className="practice-feature"><FaCheckCircle /> Real-time feedback</span>
+                      <span className="practice-feature"><FaCheckCircle /> Personalized exercises</span>
+                      <span className="practice-feature"><FaCheckCircle /> Progress tracking</span>
+                    </div>
+                  </div>
                 </div>
               );
             })}
@@ -383,24 +456,35 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
+            {/* Testimonials Section */}
       <section id="testimonials" className="testimonials-section" data-section="testimonials">
         <div className="section-content">
           <div className="section-header">
             <span className="section-number">[04]</span>
             <h2>What Our<br />Learners Say</h2>
           </div>
-          
-          <div className="testimonials-grid">
+
+          <div className="testimonials-showcase">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="testimonial-card">
-                <FaQuoteLeft className="quote-icon" />
-                <p>{testimonial.text}</p>
-                <div className="testimonial-author">
-                  <div className="author-avatar">{testimonial.avatar}</div>
-                  <div className="author-info">
-                    <div className="author-name">{testimonial.name}</div>
-                    <div className="author-role">{testimonial.role}</div>
+              <div key={index} className="testimonial-showcase-card">
+                <div className="testimonial-image-wrapper">
+                  <img src={testimonial.image} alt={testimonial.name} className="testimonial-image" />
+                  <div className="testimonial-image-overlay"></div>
+                </div>
+                <div className="testimonial-content">
+                  <div className="testimonial-rating">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <FaStar key={i} className="star-icon" />
+                    ))}
+                  </div>
+                  <FaQuoteLeft className="quote-icon-large" />
+                  <p className="testimonial-text-large">{testimonial.text}</p>
+                  <div className="testimonial-author-info">
+                    <div className="author-name-large">{testimonial.name}</div>
+                    <div className="author-details">
+                      <span className="author-role-large">{testimonial.role}</span>
+                      <span className="author-location">{testimonial.location}</span>
+                    </div>
                   </div>
                 </div>
               </div>

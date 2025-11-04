@@ -346,244 +346,521 @@ section[data-section] {
   letter-spacing: -0.02em;
 }
 
-/* Features Section */
+/* Features Section - Restaurant Gem Style */
 .features-section {
   background: var(--cream);
+  padding: 10rem 0;
 }
 
-.features-grid {
+.features-showcase {
+  display: flex;
+  flex-direction: column;
+  gap: 15rem;
+  margin-top: 8rem;
+}
+
+.feature-showcase-item {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 4rem 6rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: center;
+  min-height: 600px;
+  position: relative;
 }
 
-.feature-card {
-  background: var(--cream);
-  padding: 3rem 2.5rem;
-  border: 2px solid #b8926a;
-  border-radius: 16px;
-  transition: all 0.4s ease;
-  text-align: left;
-  box-shadow: 0 4px 20px rgba(92, 74, 50, 0.12);
+.feature-image-wrapper {
+  position: relative;
+  height: 100%;
+  min-height: 600px;
+  overflow: hidden;
 }
 
-.feature-card:hover {
-  transform: translateY(-8px) translateX(5px);
-  box-shadow: 0 8px 30px rgba(92, 74, 50, 0.2);
-  border-color: #9b7f5a;
+.feature-image-wrapper.left {
+  order: 1;
 }
 
-.feature-icon {
-  width: 70px;
-  height: 70px;
-  background: var(--warm-beige);
-  border: 2px solid #b8926a;
-  border-radius: 12px;
+.feature-image-wrapper.right {
+  order: 2;
+}
+
+.feature-image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.feature-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.feature-showcase-item:hover .feature-image {
+  transform: scale(1.08);
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(10, 8, 6, 0.4) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.feature-content-wrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 2rem;
-  color: var(--dark-brown);
-  font-size: 1.8rem;
-  transition: all 0.3s ease;
 }
 
-.feature-card:hover .feature-icon {
-  background: #9b7f5a;
-  border-color: #8a6f4a;
-  color: var(--cream);
-  transform: scale(1.1) rotate(5deg);
+.feature-content-wrapper.left {
+  order: 1;
+  justify-content: flex-start;
 }
 
-.feature-card h3 {
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: #0a0806;
-  margin-bottom: 1rem;
-  letter-spacing: -0.01em;
-  text-transform: uppercase;
-  font-size: 0.95rem;
-  letter-spacing: 0.15em;
+.feature-content-wrapper.right {
+  order: 2;
+  justify-content: flex-end;
 }
 
-.feature-card p {
+.feature-content {
+  max-width: 500px;
+  position: relative;
+}
+
+.feature-number {
   font-size: 1rem;
+  color: var(--warm-beige);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  margin-bottom: 1.5rem;
+  font-family: 'Courier New', monospace;
+}
+
+.feature-subtitle {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--warm-beige);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.feature-title-large {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900;
+  color: var(--charcoal);
+  line-height: 1.1;
+  margin-bottom: 2rem;
+  letter-spacing: -0.02em;
+}
+
+.feature-description-large {
+  font-size: 1.2rem;
   line-height: 1.8;
-  color: #3a342c;
+  color: var(--text-light);
+  margin-bottom: 3rem;
   font-weight: 400;
-  max-width: 300px;
 }
 
-/* Practice Section */
-.practice-section {
-  background: var(--beige);
-}
-
-.practice-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 6rem 8rem;
-}
-
-.practice-type-card {
-  background: var(--cream);
-  padding: 3.5rem 3rem;
-  border: 2px solid #b8926a;
-  border-radius: 16px;
-  transition: all 0.4s ease;
-  text-align: left;
-  box-shadow: 0 4px 20px rgba(92, 74, 50, 0.12);
-}
-
-.practice-type-card:hover {
-  transform: translateY(-8px) translateX(5px);
-  box-shadow: 0 8px 30px rgba(92, 74, 50, 0.2);
-  border-color: #9b7f5a;
-  background: var(--beige);
-}
-
-.practice-icon {
+.feature-icon-large {
   width: 80px;
   height: 80px;
   background: var(--warm-beige);
-  border: 2px solid #b8926a;
-  border-radius: 12px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2rem;
-  color: var(--dark-brown);
   font-size: 2rem;
-  transition: all 0.3s ease;
+  color: var(--dark-brown);
+  margin-bottom: 2.5rem;
 }
 
-.practice-type-card:hover .practice-icon {
-  background: #9b7f5a;
-  border-color: #8a6f4a;
-  color: var(--cream);
-  transform: scale(1.1) rotate(5deg);
-}
-
-.practice-type-card h3 {
+.feature-learn-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  background: transparent;
+  border: 2px solid var(--charcoal);
+  color: var(--charcoal);
   font-size: 1rem;
   font-weight: 600;
-  color: #0a0806;
-  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.feature-learn-more:hover {
+  background: var(--charcoal);
+  color: var(--cream);
+  transform: translateX(10px);
+}
+
+.feature-learn-more svg {
+  transition: transform 0.4s ease;
+}
+
+.feature-learn-more:hover svg {
+  transform: translateX(5px);
+}
+
+/* Practice Section - Restaurant Gem Style */
+.practice-section {
+  background: var(--beige);
+  padding: 10rem 0;
+}
+
+.practice-showcase {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4rem;
+  margin-top: 8rem;
+}
+
+.practice-showcase-card {
+  background: var(--cream);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  cursor: pointer;
+}
+
+.practice-showcase-card:hover {
+  transform: translateY(-15px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.practice-card-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 350px;
+  overflow: hidden;
+}
+
+.practice-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.practice-showcase-card:hover .practice-card-image {
+  transform: scale(1.15);
+}
+
+.practice-image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(10, 8, 6, 0.3) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.practice-icon-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  background: rgba(248, 246, 243, 0.95);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: var(--warm-beige);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: all 0.5s ease;
+}
+
+.practice-showcase-card:hover .practice-icon-overlay {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.practice-card-content {
+  padding: 3rem;
+}
+
+.practice-stats {
+  display: inline-block;
+  font-size: 0.85rem;
+  color: var(--warm-beige);
   text-transform: uppercase;
   letter-spacing: 0.15em;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+  background: rgba(212, 165, 116, 0.1);
+  border-radius: 20px;
 }
 
-.practice-type-card p {
-  font-size: 1rem;
-  line-height: 1.8;
-  color: #3a342c;
+.practice-card-title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--charcoal);
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.practice-card-description {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text-light);
   margin-bottom: 2rem;
-  font-weight: 400;
-  max-width: 400px;
 }
 
-.practice-benefits {
-  list-style: none;
+.practice-features-list {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 1.5rem;
+  gap: 0.75rem;
 }
 
-.practice-benefits li {
+.practice-feature {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: #3a342c;
-  font-size: 0.9rem;
-  font-weight: 400;
+  font-size: 0.95rem;
+  color: var(--text-light);
+  font-weight: 500;
 }
 
-.practice-benefits svg {
-  color: #5c4a32;
+.practice-feature svg {
+  color: var(--warm-beige);
   font-size: 0.85rem;
 }
 
-/* Testimonials Section */
+/* Testimonials Section - Restaurant Gem Style */
 .testimonials-section {
   background: var(--cream);
+  padding: 10rem 0;
 }
 
-.testimonials-grid {
+.testimonials-showcase {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 4rem 6rem;
+  gap: 3rem;
+  margin-top: 8rem;
 }
 
-.testimonial-card {
+.testimonial-showcase-card {
   background: var(--cream);
-  padding: 3rem 2.5rem;
-  border: 2px solid #b8926a;
-  border-radius: 16px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  display: flex;
+  flex-direction: column;
+}
+
+.testimonial-showcase-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.testimonial-image-wrapper {
   position: relative;
-  box-shadow: 0 4px 20px rgba(92, 74, 50, 0.12);
-  transition: all 0.4s ease;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
 }
 
-.testimonial-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 8px 30px rgba(92, 74, 50, 0.2);
-  border-color: #9b7f5a;
+.testimonial-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.quote-icon {
-  font-size: 2.5rem;
-  color: var(--warm-beige);
+.testimonial-showcase-card:hover .testimonial-image {
+  transform: scale(1.1);
+}
+
+.testimonial-image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(10, 8, 6, 0.2) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.testimonial-content {
+  padding: 2.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.testimonial-rating {
+  display: flex;
+  gap: 0.25rem;
   margin-bottom: 1.5rem;
-  opacity: 0.6;
 }
 
-.testimonial-card p {
+.star-icon {
+  color: #ffc107;
   font-size: 1rem;
+}
+
+.quote-icon-large {
+  font-size: 3rem;
+  color: var(--warm-beige);
+  opacity: 0.3;
+  margin-bottom: 1.5rem;
+}
+
+.testimonial-text-large {
+  font-size: 1.1rem;
   line-height: 1.8;
-  color: #3a342c;
+  color: var(--text-light);
   margin-bottom: 2rem;
-  font-style: normal;
-  font-weight: 400;
-  max-width: 320px;
+  font-style: italic;
+  flex: 1;
 }
 
-.testimonial-author {
+.testimonial-author-info {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(92, 74, 50, 0.2);
+}
+
+.author-name-large {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--charcoal);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.author-details {
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 2rem;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-.author-avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: var(--warm-beige);
-  border: 2px solid #b8926a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--dark-brown);
-  font-weight: 700;
-  font-size: 1rem;
-}
-
-.author-name {
+.author-role-large {
+  font-size: 0.9rem;
+  color: var(--warm-beige);
   font-weight: 600;
-  color: #0a0806;
-  margin-bottom: 0.1rem;
-  font-size: 0.95rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
 }
 
-.author-role {
+.author-location {
   font-size: 0.85rem;
-  color: #6b5842;
+  color: var(--text-light);
   font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+}
+
+/* Responsive Design - Restaurant Gem Style */
+@media (max-width: 1200px) {
+  .section-nav {
+    left: 2rem;
+  }
+
+  section[data-section] {
+    padding: 6rem 4rem 6rem 8rem;
+  }
+
+  .hero-section {
+    padding: 0 4rem 0 8rem;
+  }
+
+  .features-showcase {
+    gap: 10rem;
+  }
+
+  .feature-showcase-item {
+    min-height: 500px;
+    gap: 4rem;
+  }
+
+  .feature-image-wrapper {
+    min-height: 500px;
+  }
+
+  .testimonials-showcase {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .section-nav {
+    display: none;
+  }
+
+  .hero-section,
+  section[data-section] {
+    padding: 4rem 2rem;
+  }
+
+  .hero-title {
+    font-size: 4rem;
+  }
+
+  .features-section,
+  .practice-section,
+  .testimonials-section {
+    padding: 6rem 0;
+  }
+
+  .features-showcase {
+    gap: 6rem;
+  }
+
+  .feature-showcase-item {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    min-height: auto;
+  }
+
+  .feature-image-wrapper {
+    min-height: 400px;
+    order: 1 !important;
+  }
+
+  .feature-content-wrapper {
+    order: 2 !important;
+    justify-content: flex-start !important;
+  }
+
+  .practice-showcase {
+    grid-template-columns: 1fr;
+  }
+
+  .testimonials-showcase {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-stats {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .cta-features {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .cta-actions {
+    flex-direction: column;
+  }
 }
 
 /* CTA Section */
