@@ -9,21 +9,23 @@ export default function PostCard({ post, currentUser, onLike, onAddComment }) {
   const [newComment, setNewComment] = useState('');
   const [comments, setComments] = useState(post.comments || []);
 
-  // Like post (only if logged in)
- // In your PostCard component
-const handleLike = async () => {
-  if (!currentUser?.id) {
-    alert('Please log in to like posts');
-    return;
-  }
-  
-  const result = await onLike(post.id);
-  if (!result.success) {
-    alert(result.error || 'Failed to like post');
-  }
-};
+  const handleLike = async () => {
+    if (!currentUser?.id) {
+      alert('Please log in to like posts');
+      return;
+    }
+    
+    const result = await onLike(post.id);
+    if (!result.success) {
+      alert(result.error || 'Failed to like post');
+      return;
+    }
 
-  // Add comment (only if logged in)
+    // Toggle like state locally for immediate UI feedback
+    setIsLiked(prev => !prev);
+    setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
+  };
+
   const handleAddComment = async () => {
     if (!currentUser) return;
     if (onAddComment && newComment.trim()) {
@@ -70,7 +72,6 @@ const handleLike = async () => {
           <div className="user-details">
             <div className="user-name">{post.userName}</div>
             <div className="post-meta">
-              <span className="user-level">{post.userLevel}</span>
               <span className="post-time">{formatTime(post.timestamp)}</span>
               <span className="post-type">{getPostIcon(post.type)} {post.type}</span>
             </div>
@@ -97,7 +98,12 @@ const handleLike = async () => {
       </div>
 
       <div className="post-actions">
-        <button className={`action-btn ${isLiked ? 'liked' : ''}`} onClick={handleLike} disabled={!currentUser}>
+        <button
+          className="action-btn"
+          onClick={handleLike}
+          disabled={!currentUser}
+          style={{ color: isLiked ? 'red' : 'inherit', transition: 'color 0.3s ease' }}
+        >
           {isLiked ? <FaHeart /> : <FaRegHeart />} Like
         </button>
         <button className="action-btn" onClick={() => currentUser && setShowComments(!showComments)} disabled={!currentUser}>

@@ -116,22 +116,33 @@ export const dashboardAPI = {
   getSuggestedLessons: () => 
     api.get('/dashboard/suggested-lessons')
 };
-// ai tutur
-export const aiTutorAPI = {
-  getConversation: async () => {
-    const res = await api.get("/aitutor/conversation");
-    return res.data;
-  },
-  chatWithTutor: async (message) => {
-    const res = await api.post("/aitutor/chat", { message });
-    return res.data;
-  },
-  clearConversation: async () => {
-    const res = await api.post("/aitutor/clear");
-    return res.data;
-  },
-};
 
+// ai tutor API - updated to match backend routes
+
+// CORRECTED api.js - Remove the leading slashes
+export const aiTutorAPI = {
+  // Conversations
+  getConversations: () => api.get('ai-tutor/conversations'),
+  createConversation: (title) => api.post('ai-tutor/conversations', { title }),
+  getMessages: (conversationId) => api.get(`ai-tutor/conversations/${conversationId}/messages`),
+  sendMessage: (data) => api.post('ai-tutor/conversations/message', data),
+  deleteConversation: (conversationId) => api.delete(`ai-tutor/conversations/${conversationId}`),
+  
+  // Grammar
+  analyzeGrammar: (text) => api.post('ai-tutor/grammar/analyze', { text }),
+  getGrammarAnalyses: () => api.get('ai-tutor/grammar/analyses'),
+  getGrammarAnalysis: (analysisId) => api.get(`ai-tutor/grammar/analyses/${analysisId}`),
+  
+  // Pronunciation
+  evaluatePronunciation: (data) => api.post('ai-tutor/pronunciation/evaluate', data),
+  getPronunciationEvaluations: () => api.get('ai-tutor/pronunciation/evaluations'),
+  getPronunciationEvaluation: (evaluationId) => api.get(`ai-tutor/pronunciation/evaluations/${evaluationId}`),
+  
+  // Progress
+  getAIProgress: () => api.get('ai-tutor/progress'),
+  getAIStats: () => api.get('ai-tutor/progress/stats'),
+  updateAIStreak: () => api.post('ai-tutor/progress/streak')
+};
 
 
 // community
@@ -147,10 +158,16 @@ export const communityAPI = {
 
   createPost: async (data) => {
     try {
+      console.log('API - Sending create post request:', data);
       const res = await api.post('/community', data);
+      console.log('API - Create post response:', res.data);
       return res.data;
     } catch (err) {
-      return { success: false, error: err.response?.data?.error || "Post creation failed" };
+      console.error('API - Create post error:', err.response?.data || err.message);
+      return { 
+        success: false, 
+        error: err.response?.data?.error || "Post creation failed" 
+      };
     }
   },
 likePost: async (postId) => {

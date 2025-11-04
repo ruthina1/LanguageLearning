@@ -17,8 +17,15 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
+
     if (token) {
+      // Try verifying token with backend
       verifyToken(token);
+    } else if (storedUser) {
+      // fallback: if user exists but token not verified
+      setCurrentUser(JSON.parse(storedUser));
+      setLoading(false);
     } else {
       setLoading(false);
     }
@@ -29,10 +36,15 @@ export function AuthProvider({ children }) {
       const result = await authAPI.verifyToken(token);
       if (result.success) {
         setCurrentUser(result.user);
+        localStorage.setItem('user', JSON.stringify(result.user));
+      } else {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
       }
     } catch (error) {
       console.error('Token verification failed:', error);
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
     } finally {
       setLoading(false);
     }
@@ -44,6 +56,7 @@ export function AuthProvider({ children }) {
 
       if (result.success) {
         localStorage.setItem('token', result.token);
+        localStorage.setItem('user', JSON.stringify(result.user));
         setCurrentUser(result.user);
         return result;
       } else {
@@ -54,21 +67,20 @@ export function AuthProvider({ children }) {
     }
   };
 
-   const login = async ({ username, password }) => {
-  const result = await authAPI.login({ username, password });
-  console.log('AuthContext login result:', result); // Debug log
-  
-  if (!result.success) {
-    throw new Error(result.error || 'Login failed');
+ const login = async ({ token, user }) => {
+  if (token && user) {
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    setCurrentUser(user);
+    return { success: true };
   }
-  
-  localStorage.setItem('token', result.token);
-  setCurrentUser(result.user);
-  return result;
+  return { success: false, error: 'Invalid login data' };
 };
+
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setCurrentUser(null);
   };
 

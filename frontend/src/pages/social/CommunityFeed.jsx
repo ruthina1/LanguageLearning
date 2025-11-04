@@ -24,59 +24,104 @@ export default function CommunityFeed() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [postType, setPostType] = useState('all');
   const [showPopup, setShowPopup] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [error, setError] = useState('');
 
-
-  useEffect(() => {
-    fetchPosts(); // fetching all posts 
-  }, []);
-
-  // fetching posts based on selected type
   const filteredPosts = postType === 'all' 
     ? communityPosts 
     : communityPosts.filter(post => post.type === postType);
 
-const [isRefreshing, setIsRefreshing] = useState(false);
-
-const handleCreatePost = async (content, type, relatedData) => {
-  const result = await createPost(content, type, relatedData);
-
-  if (result.success) {
-    setShowCreateModal(false);
-    setShowPopup(true); // show success popup
-
-    // ✅ Refresh data without page reload
-    setTimeout(async () => {
-      setShowPopup(false);
-      setIsRefreshing(true);
+  useEffect(() => {
+    const loadPosts = async () => {
       try {
-        await fetchPosts(); // Refresh posts data
-      } finally {
-        setIsRefreshing(false);
+        setError('');
+        await fetchPosts();
+      } catch (err) {
+        setError('Failed to load posts. Please try again.');
+        console.error('Error loading posts:', err);
       }
-    }, 2000);
-  } else {
-    alert(result.error || "Failed to create post");
-  }
-};
+    };
+    
+    loadPosts();
+  }, []);
+
+
+  useEffect(() => {
+    if (postType && postType !== 'all') {
+      fetchPosts(postType);
+    }
+  }, [postType]);
+
+
+  const handleCreatePost = async (content, type, relatedData) => {
+    try {
+      setError('');
+      const result = await createPost(content, type, relatedData);
+
+      if (result.success) {
+        setShowCreateModal(false);
+        setShowPopup(true);
+
+        
+        setTimeout(async () => {
+          setShowPopup(false);
+          setIsRefreshing(true);
+          try {
+            
+            if (postType && postType !== 'all') {
+              await fetchPosts(postType);
+            } else {
+              await fetchPosts();
+            }
+          } catch (err) {
+            setError('Failed to refresh posts');
+          } finally {
+            setIsRefreshing(false);
+          }
+        }, 1500);
+      } else {
+        setError(result.error || "Failed to create post");
+      }
+    } catch (err) {
+      setError("An unexpected error occurred");
+      console.error('Error creating post:', err);
+    }
+  };
 
   const handleTypeChange = (type) => {
     setPostType(type);
   };
 
-  if (isLoading && communityPosts.length === 0) {
+
+  if (isLoading && communityPosts.length === 0 && !isRefreshing) {
     return (
       <div className="community-feed">
-    {isRefreshing && (
-      <div className="refreshing-overlay">
-        <div className="loading-spinner"></div>
-        <p>Refreshing posts...</p>
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading community posts...</p>
+        </div>
       </div>
-    )}
-     </div>)
+    );
   }
 
   return (
     <div className="community-feed">
+
+      {isRefreshing && (
+        <div className="refreshing-overlay">
+          <div className="loading-spinner"></div>
+          <p>Refreshing posts...</p>
+        </div>
+      )}
+
+   
+      {error && (
+        <div className="error-message">
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>Retry</button>
+        </div>
+      )}
+
       <div className="feed-header">
         <div className="header-content">
           <h1>Community Feed</h1>
@@ -87,6 +132,7 @@ const handleCreatePost = async (content, type, relatedData) => {
           <button 
             className="create-post-btn"
             onClick={() => setShowCreateModal(true)}
+            disabled={isRefreshing}
           >
             <FaEdit /> Create Post
           </button>
@@ -95,13 +141,13 @@ const handleCreatePost = async (content, type, relatedData) => {
         )}
       </div>
 
-
       <div className="feed-filters">
         {['all','achievement','progress','question','tip'].map(type => (
           <button 
             key={type}
             className={`filter-btn ${postType === type ? 'active' : ''}`}
             onClick={() => handleTypeChange(type)}
+            disabled={isLoading || isRefreshing}
           >
             {type === 'all' && <><FaStar /> All Posts</>}
             {type === 'achievement' && <><FaTrophy /> Achievements</>}
@@ -111,7 +157,6 @@ const handleCreatePost = async (content, type, relatedData) => {
           </button>
         ))}
       </div>
-
 
       <div className="feed-content">
         <div className="posts-container">
@@ -147,9 +192,7 @@ const handleCreatePost = async (content, type, relatedData) => {
           )}
         </div>
 
-
         <div className="feed-sidebar">
-
           <div className="community-stats">
             <h3>{user?.id ? 'Your Stats' : 'Community Stats'}</h3>
             <div className="stat-item">
@@ -192,15 +235,14 @@ const handleCreatePost = async (content, type, relatedData) => {
         </div>
       </div>
 
-
       {user?.id && (
         <CreatePostModal
           show={showCreateModal}
           onClose={() => setShowCreateModal(false)}
           onSubmit={handleCreatePost}
+          isLoading={isRefreshing}
         />
       )}
-
 
       {showPopup && (
         <SuccessPopup 

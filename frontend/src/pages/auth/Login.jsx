@@ -29,19 +29,17 @@ export default function Login() {
       setError('');
 
       try {
-        console.log('Attempting login with:', formData); // Debug log
-        
-        const result = await authAPI.login(formData); // Call API directly first
-        console.log('API Response:', result); // Debug log
+        const result = await authAPI.login(formData);
         
         if (result.success) {
-          await login(formData); // Use AuthContext if API works
-          navigate('/dashboard');
-        } else {
+            await login({ token: result.token, user: result.user });
+            navigate('/lesson');
+          }
+        else {
           setError(result.error || 'Login failed');
         }
       } catch (err) {
-        console.error('Login error details:', err); // Debug log
+        console.error('Login error details:', err); 
         setError(err.message || 'Failed to log in. Please check your credentials.');
       } finally {
         setIsLoading(false);

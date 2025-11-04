@@ -1,4 +1,3 @@
-// frontend/src/pages/AITutor/AITutorChat.jsx
 import React, { useState, useRef, useEffect } from 'react';
 import { useAITutor } from '../../contexts/AITutorContext';
 import { useAuth } from '../../contexts/AuthContext';
@@ -14,12 +13,22 @@ import {
   FaPaperPlane, 
   FaHourglassHalf,
   FaBook,
-  FaLightbulb
+  FaLightbulb,
+  FaPlus
 } from 'react-icons/fa';
 import './AITutorChat.css';
 
-export default function AITutorChat () {
-  const { conversation, isProcessing, sendMessage, clearConversation } = useAITutor();
+export default function AITutorChat() {
+  const { 
+    currentConversation, 
+    isProcessing, 
+    sendMessage,  // This is from your context
+    clearConversation,
+    startNewConversation,
+    conversations,
+    loadConversation
+  } = useAITutor();
+  
   const { user } = useAuth();
   const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState('chat');
@@ -31,14 +40,46 @@ export default function AITutorChat () {
 
   useEffect(() => {
     scrollToBottom();
-  }, [conversation]);
+  }, [currentConversation?.messages]);
 
-  const handleSendMessage = async (e) => {
+  // REMOVE THIS DUPLICATE FUNCTION - You already have sendMessage from context
+  // const handleSendMessage = async (messageText, currentConversationId = null) => {
+  //   try {
+  //     const response = await aiTutorAPI.sendMessage({
+  //       message: messageText,
+  //       conversationId: currentConversationId,
+  //       sender: 'user'
+  //     });
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error('Failed to send message:', error);
+  //     throw error;
+  //   }
+  // };
+
+  // CORRECTED: Form submit handler
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!message.trim()) return;
+    if (!message.trim() || isProcessing) return;
 
-    await sendMessage(message);
-    setMessage('');
+    try {
+      console.log('📤 Sending message:', message, 'to conversation:', currentConversation?.id);
+      await sendMessage(message, currentConversation?.id);
+      setMessage(''); // Clear input after sending
+    } catch (error) {
+      console.error('❌ Failed to send message:', error);
+      // You might want to show an error message to the user here
+    }
+  };
+
+  const handleClearChat = async () => {
+    if (currentConversation) {
+      await clearConversation(currentConversation.id);
+    }
+  };
+
+  const handleNewChat = () => {
+    startNewConversation();
   };
 
   const quickQuestions = [
@@ -51,71 +92,92 @@ export default function AITutorChat () {
 
   const renderChatInterface = () => (
     <div className="chat-interface">
-      <div className="messages-container">
-        {conversation.length === 0 ? (
-          <div className="welcome-message">
-            <div className="tutor-avatar"><FaRobot /></div>
-            <div className="welcome-content">
-              <h3>Hello! I'm ALEX, your AI English Tutor</h3>
-              <p>I'm here to help you learn English. You can:</p>
-              <ul>
-                <li><FaComment /> Practice conversations</li>
-                <li><FaEdit /> Get grammar corrections</li>
-                <li><FaMicrophone /> Improve pronunciation</li>
-                <li><FaBook /> Ask any English questions</li>
-              </ul>
-              <p>What would you like to work on today?</p>
-            </div>
-          </div>
-        ) : (
-         conversation.map((msg, index) => (
-              <MessageBubble key={msg?.id || index} message={msg} />
-          ))
-        )}
-        {isProcessing && (
-          <div className="typing-indicator">
-            <div className="tutor-avatar"><FaRobot /></div>
-            <div className="typing-dots">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </div>
-        )}
-        <div ref={messagesEndRef} />
-      </div>
-
-      <div className="quick-questions">
-        <h4>Quick Questions:</h4>
-        <div className="question-chips">
-          {quickQuestions.map((question, index) => (
-            <button
-              key={index}
-              className="question-chip"
-              onClick={() => sendMessage(question)}
-              disabled={isProcessing}
+      {/* Conversation Sidebar */}
+      <div className="conversation-sidebar">
+        <div className="conversation-list">
+          {conversations.map(conv => (
+            <div 
+              key={conv.id}
+              className={`conversation-item ${currentConversation?.id === conv.id ? 'active' : ''}`}
+              onClick={() => loadConversation(conv.id)}
             >
-              {question}
-            </button>
+              <div className="conversation-title">{conv.title}</div>
+              <div className="conversation-preview">
+                {conv.last_message || 'No messages yet'}
+              </div>
+            </div>
           ))}
         </div>
       </div>
 
-      <form onSubmit={handleSendMessage} className="message-input-form">
-        <div className="input-container">
-          <input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Ask me anything about English..."
-            disabled={isProcessing}
-            className="message-input"
-          />
-          <button type="submit" disabled={isProcessing || !message.trim()} className="send-button">
-            {isProcessing ? <FaHourglassHalf /> : <FaPaperPlane />}
-          </button>
+      {/* Main Chat Area */}
+      <div className="chat-main">
+        <div className="messages-container">
+          {(!currentConversation || currentConversation.messages.length === 0) ? (
+            <div className="welcome-message">
+              <div className="tutor-avatar"><FaRobot /></div>
+              <div className="welcome-content">
+                <h3>Hello! I'm ALEX, your AI English Tutor</h3>
+                <p>I'm here to help you learn English. You can:</p>
+                <ul>
+                  <li><FaComment /> Practice conversations</li>
+                  <li><FaEdit /> Get grammar corrections</li>
+                  <li><FaMicrophone /> Improve pronunciation</li>
+                  <li><FaBook /> Ask any English questions</li>
+                </ul>
+                <p>What would you like to work on today?</p>
+              </div>
+            </div>
+          ) : (
+            currentConversation.messages.map((msg, index) => (
+              <MessageBubble key={msg.id || index} message={msg} />
+            ))
+          )}
+          {isProcessing && (
+            <div className="typing-indicator">
+              <div className="tutor-avatar"><FaRobot /></div>
+              <div className="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
         </div>
-      </form>
+
+       <div className="quick-questions">
+          <h4>Quick Questions:</h4>
+          <div className="question-chips">
+            {quickQuestions.map((question, index) => (
+              <button
+                key={index}
+                className="question-chip"
+                onClick={() => sendMessage(question)} 
+                disabled={isProcessing}
+              >
+                {question}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="message-input-form">
+          <div className="input-container">
+            <input
+              type="text"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Ask me anything about English..."
+              disabled={isProcessing}
+              className="message-input"
+            />
+            <button type="submit" disabled={isProcessing || !message.trim()} className="send-button">
+              {isProcessing ? <FaHourglassHalf /> : <FaPaperPlane />}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 
@@ -123,14 +185,15 @@ export default function AITutorChat () {
     <div className="ai-tutor-page">
       <div className="tutor-header">
         <div className="header-content">
-           
           <h1><FaRobot /> ALEX - AI English Tutor</h1>
           <p>Your personal English learning assistant</p>
         </div>
         <div className="header-actions">
-          <button onClick={clearConversation} className="clear-chat-btn">
-            <FaTrash /> Clear Chat
-          </button>
+          {currentConversation && (
+            <button onClick={handleClearChat} className="clear-chat-btn">
+              <FaTrash /> Clear Chat
+            </button>
+          )}
         </div>
       </div>
 
@@ -163,14 +226,14 @@ export default function AITutorChat () {
 
       <div className="tutor-sidebar">
         <div className="user-progress">
-          <h3>Your Progress</h3>
+          <h3>Your AI Progress</h3>
           <div className="progress-item">
-            <span>Level {user?.progress.level}</span>
-            <span>{user?.progress.xp} XP</span>
+            <span>Level {user?.aiProgress?.level || 1}</span>
+            <span>{user?.aiProgress?.xp || 0} XP</span>
           </div>
           <div className="progress-item">
             <span>Current Streak</span>
-            <span>{user?.progress.streak} days</span>
+            <span>{user?.aiProgress?.streak || 0} days</span>
           </div>
         </div>
 
@@ -186,4 +249,4 @@ export default function AITutorChat () {
       </div>
     </div>
   );
-};
+}

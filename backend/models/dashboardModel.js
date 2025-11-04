@@ -17,8 +17,7 @@ export const getUserDashboardData = async (userId) => {
     );
 
     const totalXp = totalXpResult[0]?.total_xp || 0;
-    const currentLevel = Math.floor(totalXp / 1000) + 1; 
-
+    const currentLevel = Math.floor(totalXp / 1000) + 1;
 
     const [recentActivities] = await pool.query(
       `SELECT activity_type, skill, xp_earned, duration, accuracy, created_at 
@@ -28,7 +27,6 @@ export const getUserDashboardData = async (userId) => {
        LIMIT 10`,
       [userId]
     );
-
 
     const [weeklyProgress] = await pool.query(
       `SELECT DATE(created_at) as date, 
@@ -42,54 +40,24 @@ export const getUserDashboardData = async (userId) => {
       [userId]
     );
 
-    const [weakAreas] = await pool.query(
-      `SELECT skill, 
-              AVG(accuracy) as avg_accuracy,
-              COUNT(*) as practice_count
-       FROM user_activities 
-       WHERE user_id = ? 
-       GROUP BY skill 
-       HAVING practice_count > 0
-       ORDER BY avg_accuracy ASC 
-       LIMIT 3`,
-      [userId]
+    const [suggestedLessons] = await pool.query(
+      `SELECT l.* 
+       FROM lessons l
+       WHERE l.is_active = true
+         AND l.level <= ?
+       ORDER BY l.level ASC, l.difficulty ASC
+       LIMIT 5`,
+      [currentLevel + 1]
     );
-
-    const weakSkills = weakAreas.map(area => area.skill);
-    
-    let suggestedLessonsQuery = `
-      SELECT l.* 
-      FROM lessons l 
-      WHERE l.is_active = true 
-        AND l.level <= ?
-    `;
-    
-    const queryParams = [currentLevel + 1];
-    
-    if (weakSkills.length > 0) {
-      suggestedLessonsQuery += ` AND (l.skill IN (${weakSkills.map(() => '?').join(',')}) OR l.difficulty = 'beginner')`;
-      queryParams.push(...weakSkills);
-    }
-    
-    suggestedLessonsQuery += ` ORDER BY 
-      CASE WHEN l.skill IN (${weakSkills.map(() => '?').join(',')}) THEN 0 ELSE 1 END,
-      l.level ASC, 
-      l.difficulty ASC 
-      LIMIT 5`;
-    
-    queryParams.push(...weakSkills);
-    
-    const [suggestedLessons] = await pool.query(suggestedLessonsQuery, queryParams);
 
     return {
       progress: {
         current_level: currentLevel,
         lessons_completed: completedLessons[0]?.lessons_completed || 0,
-        total_xp: totalXp 
+        total_xp: totalXp
       },
       activities: recentActivities,
       weeklyProgress: weeklyProgress,
-      weakAreas: weakAreas,
       suggestedLessons: suggestedLessons
     };
   } catch (error) {
@@ -100,7 +68,7 @@ export const getUserDashboardData = async (userId) => {
 
 export const updateUserProgress = async (userId, progressData) => {
   const connection = await pool.getConnection();
-  
+
   try {
     await connection.beginTransaction();
 

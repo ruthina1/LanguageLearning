@@ -1,13 +1,22 @@
-// frontend/src/components/Auth/ProtectedRoute.js
-import { useAuth } from '../../contexts/AuthContext';
+// frontend/src/components/ProtectedRoute.jsx
+import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
-export default function ProtectedRoute ({ children })  {
-  const { user, loading } = useAuth();
+export default function ProtectedRoute({ children }) {
+  const { user, isLoading } = useAuth();
 
-  if (loading) {
-    return <div>Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <div className="spinner">Loading...</div>
+      </div>
+    );
   }
 
-  return user ? children : <Navigate to="/login" />;
-};
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}

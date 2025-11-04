@@ -213,7 +213,7 @@
 button[type="submit"] {
   width: 100%;
   padding: 15px;
-  background: linear-gradient(135deg, #43cea2 0%, #38ef7d 100%);
+  background: linear-gradient(135deg, #008080 0%, #006666 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -308,7 +308,7 @@ button[type="submit"]:disabled::after {
 }
 
 .auth-links a {
-  color: #43cea2;
+  color:  #008080;
   text-decoration: none;
   font-weight: 500;
   transition: all 0.3s ease;
@@ -321,7 +321,7 @@ button[type="submit"]:disabled::after {
 }
 
 .auth-links a:hover {
-  color: #3ab892;
+  color:  #006666;
   transform: translateX(5px);
 }
 
@@ -476,15 +476,15 @@ button[type="submit"]:disabled::after {
   }
 
   .credential-item span:last-child {
-    color: #90cdf4;
+    color: #008080;
     background: #2d3748;
   }
   
   .auth-links a {
-    color: #43cea2;
+    color: #008080;
   }
   
   .auth-links a:hover {
-    color: #3ab892;
+    color:  #006666;
   }
 }

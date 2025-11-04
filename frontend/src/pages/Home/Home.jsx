@@ -1,58 +1,76 @@
 // frontend/src/pages/Home/Home.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { 
-  FaRocket, 
-  FaChartLine, 
-  FaTrophy, 
-  FaUsers, 
-  FaGlobe, 
-  FaMicrophone, 
-  FaHeadphones,
-  FaComments,
-  FaPenAlt,
-  FaStar,
-  FaCheckCircle,
-  FaPlay,
-  FaArrowRight,
-  FaQuoteLeft,
-  FaMobile,
-  FaGraduationCap,
-  FaShieldAlt,
-  FaInfinity
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import {
+  FaMicrophone, FaChartLine, FaTrophy, FaUsers, FaGlobe,
+  FaComments, FaPenAlt, FaCheckCircle, FaArrowRight, FaQuoteLeft,
+  FaRocket, FaPlay, FaGraduationCap, FaShieldAlt, FaInfinity, FaHeadphones
 } from 'react-icons/fa';
 import './Home.css';
-import Navbar from '../../components/Layout/Navbar';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [currentFeature, setCurrentFeature] = useState(0);
+  const heroRef = useRef(null);
+  const sectionNavRef = useRef(null);
+  const scrollIndicatorRef = useRef(null);
+
+  const stats = [
+    { number: '50K+', label: 'Active Learners' },
+    { number: '15+', label: 'Languages' },
+    { number: '5+', label: 'Years Experience' }
+  ];
+
+  const techStack = ['Speaking', 'Grammar', 'Pronounciation', 'Reading', 'Writting'];
 
   const features = [
     {
       icon: FaMicrophone,
       title: 'AI-Powered Pronunciation',
-      description: 'Real-time voice recognition technology provides instant feedback on your pronunciation accuracy'
+      description: 'Real-time voice recognition technology provides instant feedback'
     },
     {
       icon: FaChartLine,
       title: 'Personalized Learning Path',
-      description: 'Adaptive algorithms create custom lessons based on your progress and weaknesses'
+      description: 'Adaptive algorithms create custom lessons based on your progress'
     },
     {
       icon: FaTrophy,
       title: 'Gamified Experience',
-      description: 'Earn XP, unlock achievements, and climb leaderboards while mastering English'
+      description: 'Earn XP, unlock achievements, and climb leaderboards'
     }
   ];
 
-  const stats = [
-    { number: '50K+', label: 'Active Learners' },
-    { number: '98%', label: 'Success Rate' },
-    { number: '2.5M', label: 'Lessons Completed' },
-    { number: '4.8/5', label: 'User Rating' }
+  const practiceTypes = [
+    {
+      icon: FaMicrophone,
+      title: 'Speaking Practice',
+      description: 'Master pronunciation with advanced voice recognition',
+      color: '#d4a574'
+    },
+    {
+      icon: FaHeadphones,
+      title: 'Listening Comprehension',
+      description: 'Train your ear with authentic audio content',
+      color: '#b8926a'
+    },
+    {
+      icon: FaComments,
+      title: 'Conversation Practice',
+      description: 'Build confidence in real-life dialogues',
+      color: '#9b7f5a'
+    },
+    {
+      icon: FaPenAlt,
+      title: 'Writing Excellence',
+      description: 'Perfect your writing with intelligent feedback',
+      color: '#8a6f4a'
+    }
   ];
 
   const testimonials = [
@@ -76,62 +94,136 @@ export default function Home() {
     }
   ];
 
-  const practiceTypes = [
-    {
-      icon: FaMicrophone,
-      title: 'Speaking Practice',
-      description: 'Master pronunciation with advanced voice recognition',
-      color: '#6a11cb'
-    },
-    {
-      icon: FaHeadphones,
-      title: 'Listening Comprehension',
-      description: 'Train your ear with authentic audio content',
-      color: '#2575fc'
-    },
-    {
-      icon: FaComments,
-      title: 'Conversation Practice',
-      description: 'Build confidence in real-life dialogues',
-      color: '#00b4db'
-    },
-    {
-      icon: FaPenAlt,
-      title: 'Writing Excellence',
-      description: 'Perfect your writing with intelligent feedback',
-      color: '#ff6b6b'
-    }
-  ];
-
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentFeature((prev) => (prev + 1) % features.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [features.length]);
+    // Hero animations - only animate position, keep opacity at 1 always
+    gsap.set(['.hero-line-1', '.hero-line-2', '.hero-subtitle', '.tech-badge', '.stat-item', '.hero-actions'], {
+      opacity: 1,
+      y: 0
+    });
 
-  // Add this to your Home component, right before the return statement
-useEffect(() => {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
+    const heroTl = gsap.timeline({ defaults: { opacity: 1 } });
+    heroTl
+      .from('.hero-line-1', { y: 100, duration: 1, ease: 'power3.out' })
+      .from('.hero-line-2', { y: 100, duration: 1, ease: 'power3.out' }, '-=0.7')
+      .from('.hero-subtitle', { y: 30, duration: 0.8 }, '-=0.5')
+      .from('.tech-badge', { 
+        y: 20, 
+        duration: 0.6, 
+        stagger: 0.1
+      }, '-=0.4')
+      .from('.stat-item', { 
+        y: 30, 
+        duration: 0.8, 
+        stagger: 0.15
+      }, '-=0.6')
+      .from('.hero-actions', { y: 30, duration: 0.8 }, '-=0.4');
+
+    // Section navigation scroll animations
+    ScrollTrigger.create({
+      trigger: '.home-page',
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate: (self) => {
+        const sections = document.querySelectorAll('[data-section]');
+        const scrollPos = window.scrollY + window.innerHeight / 2;
+        
+        sections.forEach((section, index) => {
+          const sectionTop = section.offsetTop;
+          const sectionBottom = sectionTop + section.offsetHeight;
+          
+          if (scrollPos >= sectionTop && scrollPos < sectionBottom) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+              item.classList.remove('active');
+            });
+            const navItems = document.querySelectorAll('.nav-item');
+            if (navItems[index]) navItems[index].classList.add('active');
+          }
+        });
       }
     });
-  }, {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-  });
 
-  // Observe all animatable elements
-  const animatableElements = document.querySelectorAll(
-    '.feature-card, .practice-type-card, .step, .testimonial-card'
-  );
-  
-  animatableElements.forEach(el => observer.observe(el));
+    // Scroll indicator
+    gsap.to('.scroll-indicator', {
+      y: 10,
+      repeat: -1,
+      yoyo: true,
+      duration: 1.5,
+      ease: 'power2.inOut'
+    });
 
-  return () => observer.disconnect();
-}, []);
+    // Section scroll animations - keep content visible
+    gsap.utils.toArray('[data-section]').forEach((section) => {
+      const content = section.querySelector('.section-content');
+      if (content) {
+        gsap.set(content.children, { opacity: 1, y: 0 });
+        gsap.from(content.children, {
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+          },
+          y: 60,
+          opacity: 1,
+          duration: 1,
+          stagger: 0.2,
+          ease: 'power3.out'
+        });
+      }
+    });
+
+    // Feature cards animation - keep visible
+    gsap.utils.toArray('.feature-card').forEach((card, index) => {
+      gsap.set(card, { opacity: 1, y: 0 });
+      gsap.from(card, {
+        scrollTrigger: {
+          trigger: card,
+          start: 'top 85%',
+          toggleActions: 'play none none reverse'
+        },
+        y: 50,
+        opacity: 1,
+        duration: 0.8,
+        delay: index * 0.1,
+        ease: 'power2.out'
+      });
+    });
+
+    // Practice cards animation - keep visible
+    gsap.utils.toArray('.practice-type-card').forEach((card, index) => {
+      gsap.set(card, { opacity: 1, y: 0 });
+      gsap.from(card, {
+        scrollTrigger: {
+          trigger: card,
+          start: 'top 85%',
+          toggleActions: 'play none none reverse'
+        },
+        y: 50,
+        opacity: 1,
+        duration: 0.8,
+        delay: index * 0.1,
+        ease: 'power2.out'
+      });
+    });
+
+    // Testimonial cards animation - keep visible
+    gsap.utils.toArray('.testimonial-card').forEach((card, index) => {
+      gsap.set(card, { opacity: 1, y: 0 });
+      gsap.from(card, {
+        scrollTrigger: {
+          trigger: card,
+          start: 'top 85%',
+          toggleActions: 'play none none reverse'
+        },
+        y: 50,
+        opacity: 1,
+        duration: 0.8,
+        delay: index * 0.1,
+        ease: 'power2.out'
+      });
+    });
+
+  }, []);
+
   const handleGetStarted = () => {
     if (user) {
       navigate('/dashboard');
@@ -144,31 +236,70 @@ useEffect(() => {
     navigate('/practice/demo');
   };
 
+  const scrollToSection = (sectionId) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      window.scrollTo({
+        top: section.offsetTop,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
     <div className="home-page">
-      <section className="hero-section">
-        <div className="hero-background">
-          <div className="hero-overlay"></div>
+      {/* Section Navigation */}
+      <nav className="section-nav" ref={sectionNavRef}>
+        <div className="nav-item active" onClick={() => scrollToSection('hero')}>
+          <span className="nav-number">[01]</span>
+          <span className="nav-label">Home</span>
         </div>
+        <div className="nav-item" onClick={() => scrollToSection('features')}>
+          <span className="nav-number">[02]</span>
+          <span className="nav-label">Features</span>
+        </div>
+        <div className="nav-item" onClick={() => scrollToSection('practice')}>
+          <span className="nav-number">[03]</span>
+          <span className="nav-label">Practice</span>
+        </div>
+        <div className="nav-item" onClick={() => scrollToSection('testimonials')}>
+          <span className="nav-number">[04]</span>
+          <span className="nav-label">Testimonials</span>
+        </div>
+        <div className="nav-item" onClick={() => scrollToSection('cta')}>
+          <span className="nav-number">[05]</span>
+          <span className="nav-label">Get Started</span>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section id="hero" className="hero-section" data-section="hero" ref={heroRef}>
         <div className="hero-content">
-          <div className="hero-text">
-            <div className="badge">
-              <FaStar className="badge-icon" />
-              <span>Trusted by 50,000+ learners worldwide</span>
+          <div className="hero-text-wrapper">
+            <div className="hero-subtitle">Creative Way of Learning/ Language Learning Specialist </div>
+            
+            <h1 className="hero-title">
+              <span className="hero-line-1">LINGUA</span>
+              <span className="hero-line-2">LEARN</span>
+            </h1>
+
+            <div className="tech-stack">
+              <div className="tech-stack-wrapper">
+                {techStack.map((tech, index) => {
+                  const techClass = tech.toLowerCase().replace(/\s+/g, '-');
+                  return (
+                    <span key={index} className={`tech-badge tech-badge-${techClass}`} data-tech={tech}>{tech}</span>
+                  );
+                })}
+                {techStack.map((tech, index) => {
+                  const techClass = tech.toLowerCase().replace(/\s+/g, '-');
+                  return (
+                    <span key={`duplicate-${index}`} className={`tech-badge tech-badge-${techClass}`} data-tech={tech}>{tech}</span>
+                  );
+                })}
+              </div>
             </div>
-            <h1>Master English with <span className="gradient-text">AI-Powered</span> Precision</h1>
-            <p className="hero-description">
-              LinguaLearn combines cutting-edge artificial intelligence with proven language learning methodologies 
-              to deliver personalized English education that adapts to your unique learning style, pace, and goals.
-            </p>
-            <div className="hero-statss">
-              {stats.map((stat, index) => (
-                <div key={index} className="stat-itemm">
-                  <div className="stat-number">{stat.number}</div>
-                  <div className="stat-label">{stat.label}</div>
-                </div>
-              ))}
-            </div>
+
             <div className="hero-actions">
               <button className="btn-primary" onClick={handleGetStarted}>
                 <FaRocket />
@@ -179,57 +310,42 @@ useEffect(() => {
                 Try Demo Lesson
               </button>
             </div>
-          </div>
-          <div className="hero-visual">
-            <div className="floating-card card-1">
-              <FaMicrophone />
-              <span>Pronunciation: 95%</span>
-            </div>
-            <div className="floating-card card-2">
-              <FaTrophy />
-              <span>Level 5 Achieved!</span>
-            </div>
-            <div className="floating-card card-3">
-              <FaChartLine />
-              <span>+150 XP Today</span>
-            </div>
-            <div className="main-visual">
-              <div className="visual-content">
-                <div className="progress-ring">
-                  <div className="progress-fill"></div>
+
+            <div className="hero-stats">
+              {stats.map((stat, index) => (
+                <div key={index} className="stat-item">
+                  <div className="stat-number">{stat.number}</div>
+                  <div className="stat-label">{stat.label}</div>
                 </div>
-                <div className="visual-text">
-                  <span>Fluency Progress</span>
-                  <strong>78% Complete</strong>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
+        </div>
+
+        <div className="scroll-indicator" ref={scrollIndicatorRef}>
+          <span>Scroll</span>
+          <div className="scroll-line"></div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="features-section">
-        <div className="container">
+      <section id="features" className="features-section" data-section="features">
+        <div className="section-content">
           <div className="section-header">
-            <h2>Why LinguaLearn Stands Out</h2>
-            <p>Experience the future of language learning with our innovative approach</p>
+            <span className="section-number">[02]</span>
+            <h2>Why LinguaLearn<br />Stands Out</h2>
           </div>
           
           <div className="features-grid">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <div 
-                  key={index} 
-                  className={`feature-card ${index === currentFeature ? 'active' : ''}`}
-                >
+                <div key={index} className="feature-card">
                   <div className="feature-icon">
                     <Icon />
                   </div>
                   <h3>{feature.title}</h3>
                   <p>{feature.description}</p>
-                  <div className="feature-indicator"></div>
                 </div>
               );
             })}
@@ -238,22 +354,18 @@ useEffect(() => {
       </section>
 
       {/* Practice Types Section */}
-      <section className="practice-section">
-        <div className="container">
+      <section id="practice" className="practice-section" data-section="practice">
+        <div className="section-content">
           <div className="section-header">
-            <h2>Comprehensive Learning Experience</h2>
-            <p>Develop all aspects of English proficiency through targeted practice</p>
+            <span className="section-number">[03]</span>
+            <h2>Comprehensive<br />Learning Experience</h2>
           </div>
           
           <div className="practice-grid">
             {practiceTypes.map((practice, index) => {
               const Icon = practice.icon;
               return (
-                <div 
-                  key={index} 
-                  className="practice-type-card"
-                  style={{ '--accent-color': practice.color }}
-                >
+                <div key={index} className="practice-type-card">
                   <div className="practice-icon">
                     <Icon />
                   </div>
@@ -271,56 +383,12 @@ useEffect(() => {
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="how-it-works">
-        <div className="container">
-          <div className="section-header">
-            <h2>Your Journey to Fluency in 4 Steps</h2>
-            <p>Simple, effective, and designed for real results</p>
-          </div>
-          
-          <div className="steps-container">
-            <div className="step">
-              <div className="step-number">01</div>
-              <div className="step-content">
-                <h3>Assessment & Personalization</h3>
-                <p>Complete our intelligent placement test to create your customized learning path</p>
-              </div>
-            </div>
-            
-            <div className="step">
-              <div className="step-number">02</div>
-              <div className="step-content">
-                <h3>Interactive Learning</h3>
-                <p>Engage with AI-powered lessons that adapt to your progress in real-time</p>
-              </div>
-            </div>
-            
-            <div className="step">
-              <div className="step-number">03</div>
-              <div className="step-content">
-                <h3>Practice & Application</h3>
-                <p>Apply your skills in realistic scenarios with instant feedback</p>
-              </div>
-            </div>
-            
-            <div className="step">
-              <div className="step-number">04</div>
-              <div className="step-content">
-                <h3>Progress & Mastery</h3>
-                <p>Track your improvement and achieve fluency milestones</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Testimonials Section */}
-      <section className="testimonials-section">
-        <div className="container">
+      <section id="testimonials" className="testimonials-section" data-section="testimonials">
+        <div className="section-content">
           <div className="section-header">
-            <h2>Success Stories from Our Learners</h2>
-            <p>Join thousands who have transformed their English skills</p>
+            <span className="section-number">[04]</span>
+            <h2>What Our<br />Learners Say</h2>
           </div>
           
           <div className="testimonials-grid">
@@ -329,10 +397,10 @@ useEffect(() => {
                 <FaQuoteLeft className="quote-icon" />
                 <p>{testimonial.text}</p>
                 <div className="testimonial-author">
-                  <div className="avatar">{testimonial.avatar}</div>
+                  <div className="author-avatar">{testimonial.avatar}</div>
                   <div className="author-info">
-                    <strong>{testimonial.name}</strong>
-                    <span>{testimonial.role}</span>
+                    <div className="author-name">{testimonial.name}</div>
+                    <div className="author-role">{testimonial.role}</div>
                   </div>
                 </div>
               </div>
@@ -342,10 +410,11 @@ useEffect(() => {
       </section>
 
       {/* CTA Section */}
-      <section className="cta-section">
-        <div className="container">
+      <section id="cta" className="cta-section" data-section="cta">
+        <div className="section-content">
           <div className="cta-content">
-            <h2>Ready to Transform Your English Skills?</h2>
+            <span className="section-number">[05]</span>
+            <h2>Ready to Transform<br />Your English Skills?</h2>
             <p>Join LinguaLearn today and start your journey to fluency with our AI-powered platform</p>
             <div className="cta-features">
               <div className="feature">
@@ -353,7 +422,7 @@ useEffect(() => {
                 <span>7-day free trial</span>
               </div>
               <div className="feature">
-                <FaMobile />
+                <FaGraduationCap />
                 <span>Learn anywhere, anytime</span>
               </div>
               <div className="feature">

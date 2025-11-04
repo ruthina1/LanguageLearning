@@ -76,12 +76,12 @@
 }
 
 .nav-btn:hover {
-  border-color: #43cea2;
+  border-color: #006666;
   transform: translateY(-2px);
 }
 
 .nav-btn.active {
-  background: linear-gradient(135deg, #43cea2 0%, #38ef7d 100%);
+  background: linear-gradient(135deg, #008080 0%, #006666 100%);
   color: white;
   border-color: #43cea2;
 }
@@ -133,7 +133,7 @@
 }
 
 .progress-item span:last-child {
-  color: #43cea2;
+  color:  #008080;
   font-weight: 600;
   font-size: 1.1rem;
 }
@@ -226,7 +226,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #43cea2;
+  background:  #008080;
   animation: typing 1.4s infinite ease-in-out;
 }
 
@@ -266,7 +266,7 @@
 }
 
 .question-chip:hover {
-  border-color: #43cea2;
+  border-color:  #008080;
   background: white;
   transform: translateY(-2px);
 }
@@ -299,13 +299,13 @@
 
 .message-input:focus {
   outline: none;
-  border-color: #43cea2;
+  border-color:  #008080;
   background: white;
   box-shadow: 0 0 0 3px rgba(67, 206, 162, 0.1);
 }
 
 .send-button {
-  background: linear-gradient(135deg, #43cea2 0%, #38ef7d 100%);
+  background: linear-gradient(135deg,#008080 0%, #006666 100%);
   color: white;
   border: none;
   width: 50px;
@@ -352,7 +352,7 @@
 }
 
 .message-bubble.user .avatar {
-  background: linear-gradient(135deg, #43cea2 0%, #38ef7d 100%);
+  background: linear-gradient(135deg,#008080 0%, #006666 100%);
   color: white;
   order: 2;
 }
@@ -370,7 +370,7 @@
 }
 
 .message-bubble.user .message-content {
-  background: linear-gradient(135deg, #43cea2 0%, #38ef7d 100%);
+  background: linear-gradient(135deg, #008080 0%, #006666 100%);
   color: white;
   border-bottom-right-radius: 5px;
 }

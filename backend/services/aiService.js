@@ -267,18 +267,26 @@ IMPORTANT:
     } catch (error) {
     }
   }
+
+  // Use enhanced mock grammar analysis
+  console.log('🤖 Using enhanced mock grammar analysis');
   return this.getEnhancedMockGrammarAnalysis(text);
 }
 
+// Add this new method for parsing grammar responses
 parseGrammarResponse(text) {
   try {
     let cleanedText = text.trim();
+    
+    // Remove markdown code blocks
     cleanedText = cleanedText.replace(/```json\s*/g, '').replace(/\s*```/g, '');
     cleanedText = cleanedText.trim();
     
     console.log('🔧 Cleaning grammar response:', cleanedText.substring(0, 200) + '...');
     
     const parsed = JSON.parse(cleanedText);
+    
+    // Validate and ensure all required fields exist
     return {
       correctedText: parsed.correctedText || parsed.corrected_text || "",
       isPerfect: parsed.isPerfect || false,
@@ -291,13 +299,16 @@ parseGrammarResponse(text) {
     };
     
   } catch (parseError) {
+    console.warn('⚠️ Grammar JSON parsing failed, using enhanced mock');
     return this.getEnhancedMockGrammarAnalysis(text);
   }
 }
 
+// Keep your existing getEnhancedMockGrammarAnalysis method but improve it:
 getEnhancedMockGrammarAnalysis(text) {
   const lowerText = text.toLowerCase().trim();
   
+  // Enhanced mock responses for common grammar issues
   const mockAnalyses = {
     "are how you": {
       correctedText: "How are you?",
@@ -367,12 +378,14 @@ getEnhancedMockGrammarAnalysis(text) {
     }
   };
 
+  // Find matching mock analysis
   for (const [key, analysis] of Object.entries(mockAnalyses)) {
     if (lowerText.includes(key.toLowerCase())) {
       return analysis;
     }
   }
 
+  // Smart default analysis based on text characteristics
   if (text.split(' ').length <= 3) {
     return {
       correctedText: text,
@@ -389,6 +402,7 @@ getEnhancedMockGrammarAnalysis(text) {
     };
   }
 
+  // Default analysis for other texts
   return {
     correctedText: text,
     isPerfect: true,
@@ -423,27 +437,41 @@ getEnhancedMockGrammarAnalysis(text) {
   }
 
 
-async evaluatePronunciation(spokenText, targetText) {
 
+
+
+  // In your aiService.js - update the evaluatePronunciation method
+async evaluatePronunciation(spokenText, targetText) {
+  // Try to use real AI if available
   if (this.model) {
+    console.log(`🔊 Using REAL AI for pronunciation evaluation`);
     try {
       const prompt = this.buildPronunciationPrompt(spokenText, targetText);
+      console.log('🤖 Sending pronunciation evaluation to AI...');
       
       const result = await this.model.generateContent(prompt);
       const response = await result.response;
       const textResponse = response.text();
       
+      console.log('✅ Raw pronunciation AI response:', textResponse);
+      
       const parsedEvaluation = this.parsePronunciationResponse(textResponse);
+      console.log('✅ Parsed pronunciation evaluation:', parsedEvaluation);
       
       return parsedEvaluation;
       
     } catch (error) {
+      console.error('❌ Real AI pronunciation evaluation failed:', error.message);
+      // Fall through to mock response
     }
   }
 
+  // Use enhanced mock pronunciation evaluation
+  console.log('🔊 Using enhanced mock pronunciation evaluation');
   return this.getEnhancedMockPronunciationEvaluation(spokenText, targetText);
 }
 
+// Add this new method for building pronunciation prompts
 
 buildPronunciationPrompt(spokenText, targetText) {
   return `You are an expert English pronunciation coach specialized in helping Amharic speakers. 
@@ -472,20 +500,29 @@ IMPORTANT:
 - Use simple language`;
 }
 
+// Add this new method for parsing pronunciation responses
+// In your AIService.js - update the parsePronunciationResponse method
 parsePronunciationResponse(text) {
   try {
     let cleanedText = text.trim();
     
+    console.log('🔧 Raw AI response:', text);
+    
+    // Remove markdown code blocks more aggressively
     cleanedText = cleanedText.replace(/```json\s*/gi, '').replace(/\s*```/gi, '');
     cleanedText = cleanedText.trim();
     
+    // Handle incomplete JSON by finding the actual JSON part
     const jsonMatch = cleanedText.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       cleanedText = jsonMatch[0];
     }
     
+    console.log('🔧 Cleaning pronunciation response:', cleanedText.substring(0, 200) + '...');
+    
     const parsed = JSON.parse(cleanedText);
     
+    // Validate and ensure all required fields exist
     return {
       accuracy_score: parsed.accuracy_score || parsed.accuracyScore || 0.7,
       feedback: {
@@ -497,7 +534,10 @@ parsePronunciationResponse(text) {
     };
     
   } catch (parseError) {
-    console.warn(' Pronunciation JSON parsing failed:', parseError.message);
+    console.warn('⚠️ Pronunciation JSON parsing failed:', parseError.message);
+    console.log('🔧 Attempting to extract JSON from incomplete response...');
+    
+    // Try to extract what we can from the incomplete response
     try {
       const accuracyMatch = text.match(/"accuracy_score":\s*(\d+\.?\d*)/);
       const accuracy = accuracyMatch ? parseFloat(accuracyMatch[1]) : 0.7;
@@ -518,8 +558,9 @@ parsePronunciationResponse(text) {
     }
   }
 }
+// Update the mock pronunciation evaluation to be more comprehensive
 getEnhancedMockPronunciationEvaluation(spokenText, targetText) {
-
+  // Common pronunciation issues for Amharic speakers
   const commonIssues = {
     "th": {
       description: "Difficulty with 'th' sounds (θ and ð)",
@@ -543,6 +584,7 @@ getEnhancedMockPronunciationEvaluation(spokenText, targetText) {
     }
   };
 
+  // Analyze the target text for common challenging sounds
   const lowerTarget = targetText.toLowerCase();
   const detectedIssues = [];
   
@@ -559,6 +601,7 @@ getEnhancedMockPronunciationEvaluation(spokenText, targetText) {
     detectedIssues.push(commonIssues.p);
   }
 
+  // Create mispronounced words array
   const mispronouncedWords = detectedIssues.map((issue, index) => ({
     word: this.extractRelevantWord(targetText, issue),
     issue_description: issue.description,
@@ -566,7 +609,7 @@ getEnhancedMockPronunciationEvaluation(spokenText, targetText) {
     phonetic_spelling: issue.phonetic
   }));
 
-
+  // Calculate accuracy based on text complexity and detected issues
   const wordCount = targetText.split(' ').length;
   const baseAccuracy = Math.max(0.6, 0.9 - (detectedIssues.length * 0.1));
   const finalAccuracy = Math.min(0.95, baseAccuracy);
@@ -598,6 +641,7 @@ getEnhancedMockPronunciationEvaluation(spokenText, targetText) {
   };
 }
 
+// Helper method to extract relevant words from target text
 extractRelevantWord(targetText, issue) {
   const words = targetText.split(' ');
   
@@ -625,6 +669,8 @@ extractRelevantWord(targetText, issue) {
   return words[0] || 'word';
 }
 
+// Make sure to define commonIssues as a constant at the top of your class
+// Add this inside your AIService class constructor or as a class property:
 get commonIssues() {
   return {
     "th": {
