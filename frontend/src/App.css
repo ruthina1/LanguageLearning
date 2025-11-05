@@ -4,6 +4,32 @@
   width: 100%;
 }
 
+/* Prevent App styles from affecting auth pages */
+.auth-page,
+.auth-page * {
+  text-align: left !important;
+}
+
+.auth-page input,
+.auth-page select,
+.auth-page button,
+.auth-page label,
+.auth-page span,
+.auth-page p,
+.auth-page h1,
+.auth-page h2,
+.auth-page h3,
+.auth-page a,
+.auth-page svg,
+.auth-page .auth-form-card,
+.auth-page .form-group,
+.auth-page .input-icon,
+.auth-page .password-toggle {
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: inherit !important;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

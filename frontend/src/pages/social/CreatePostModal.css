@@ -1,3 +1,16 @@
+/* Create Post Modal - Restaurant Gem Style with Black & White Base */
+
+/* Color Variables - Black & White Palette */
+:root {
+  --white: #ffffff;
+  --black: #000000;
+  --dark-gray: #1a1a1a;
+  --medium-gray: #666666;
+  --light-gray: #e5e5e5;
+  --lighter-gray: #f5f5f5;
+  --border-gray: #cccccc;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -12,27 +25,30 @@
 }
 
 .create-post-modal {
-  background: white;
-  border-radius: 12px;
+  background: var(--white);
+  border-radius: 16px;
   width: 90%;
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
+  border: 1px solid var(--light-gray);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  padding: 0;
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 24px;
-  border-bottom: 1px solid #e1e5e9;
+  padding: 2rem;
+  border-bottom: 1px solid var(--light-gray);
 }
 
 .modal-header h2 {
   margin: 0;
-  color: #2d3748;
+  color: var(--black);
   font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .close-btn {
@@ -40,159 +56,163 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: #718096;
-  padding: 4px;
+  color: var(--medium-gray);
+  padding: 0.25rem;
   border-radius: 4px;
+  transition: all 0.2s ease;
 }
 
 .close-btn:hover {
-  background: #f7fafc;
-  color: #4a5568;
+  background: var(--lighter-gray);
+  color: var(--black);
 }
 
 .post-form {
-  padding: 24px;
+  padding: 2rem;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
   font-weight: 600;
-  color: #4a5568;
+  color: var(--black);
 }
 
 .form-group textarea,
 .form-group input,
 .form-group select {
   width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #e2e8f0;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-gray);
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.3s ease;
-  background: #f7fafc;
+  background: var(--white);
+  color: var(--black);
+  font-family: inherit;
 }
 
 .form-group textarea:focus,
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #43cea2;
-  background: white;
-  box-shadow: 0 0 0 3px rgba(67, 206, 162, 0.1);
+  border-color: var(--black);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
 }
 
 .type-options {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 0.75rem;
 }
 
 .type-option {
-  border: 2px solid #e2e8f0;
+  border: 1px solid var(--border-gray);
   border-radius: 8px;
-  padding: 16px;
+  padding: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: #f7fafc;
+  background: var(--white);
 }
 
 .type-option:hover {
-  border-color: #43cea2;
-  background: white;
+  border-color: var(--black);
+  background: var(--lighter-gray);
 }
 
 .type-option.active {
-  border-color: #43cea2;
-  background: #f0fff5;
+  border-color: var(--black);
+  background: var(--lighter-gray);
 }
 
 .type-option .type-icon {
   font-size: 1.5rem;
-  margin-bottom: 8px;
-  color: #43cea2;
+  margin-bottom: 0.5rem;
+  color: var(--black);
 }
 
 .type-option .type-label {
-  font-weight: 600;
-  color: #2d3748;
-  margin-bottom: 4px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 0.25rem;
 }
 
 .type-option .type-desc {
   font-size: 0.85rem;
-  color: #718096;
+  color: var(--medium-gray);
 }
 
 .related-fields {
-  background: #f8f9fa;
+  background: var(--lighter-gray);
   border-radius: 8px;
-  padding: 16px;
-  margin-top: 16px;
+  padding: 1rem;
+  margin-top: 1rem;
+  border: 1px solid var(--light-gray);
 }
 
 .related-fields h4 {
-  margin: 0 0 12px 0;
-  color: #2d3748;
+  margin: 0 0 0.75rem 0;
+  color: var(--black);
   font-size: 1rem;
+  font-weight: 700;
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 0.75rem;
 }
 
 .form-actions {
   display: flex;
-  gap: 12px;
+  gap: 0.75rem;
   justify-content: flex-end;
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid #e1e5e9;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--light-gray);
 }
 
 .cancel-btn {
-  padding: 12px 24px;
-  border: 2px solid #e2e8f0;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--border-gray);
   border-radius: 8px;
-  background: white;
-  color: #4a5568;
+  background: var(--white);
+  color: var(--black);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .cancel-btn:hover {
-  border-color: #cbd5e0;
-  background: #f7fafc;
+  border-color: var(--black);
+  background: var(--lighter-gray);
 }
 
 .create-btn {
-  padding: 12px 24px;
+  padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 8px;
-  background: linear-gradient(135deg, #43cea2, #38ef7d);
-  color: white;
+  background: var(--black);
+  color: var(--white);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .create-btn:hover {
+  background: var(--dark-gray);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(67, 206, 162, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
-
 
 @media (max-width: 768px) {
   .create-post-modal {
     width: 95%;
-    margin: 20px;
+    margin: 1.25rem;
   }
 
   .type-options {

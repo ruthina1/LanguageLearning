@@ -1,24 +1,78 @@
-/* LessonPage.css */
+/* LessonPage.css - Restaurant Gem Style with Shoprooof Colors */
+
+/* Color Variables - Black & White Palette */
 :root {
-  --teal-primary: #008080;
-  --teal-dark: #006666;
-  --teal-light: #00b3b3;
-  --teal-lighter: #a7f2f2;
-  --teal-glow: rgba(0, 179, 179, 0.3);
-  --gradient-primary: linear-gradient(135deg, #008080 0%, #006666 100%);
-  --gradient-secondary: linear-gradient(135deg, #00b3b3 0%, #008080 100%);
-  --gradient-accent: linear-gradient(135deg, #00b3b3, #008080, #006666);
+  --white: #ffffff;
+  --black: #000000;
+  --dark-gray: #1a1a1a;
+  --medium-gray: #666666;
+  --light-gray: #e5e5e5;
+  --lighter-gray: #f5f5f5;
+  --border-gray: #cccccc;
 }
 
 .lesson-page {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: transparent;
+  padding: 4rem 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  background: var(--white) !important;
   min-height: 100vh;
-  animation: fadeIn 0.8s ease-out;
+  color: var(--black);
+  overflow-y: visible;
+  overflow-x: hidden;
+}
+
+/* Override any parent gradients with solid background - only when lesson page is present */
+body:has(.lesson-page),
+html:has(.lesson-page) {
+  background: var(--white) !important;
+  background-image: none !important;
+}
+
+/* Ensure App container doesn't add gradients */
+.App:has(.lesson-page),
+#root:has(.lesson-page) {
+  background: var(--white) !important;
+  background-image: none !important;
+}
+
+/* Ensure smooth solid background throughout - remove any gradient backgrounds from main containers */
+.lesson-page,
+.lesson-container {
+  background-image: none !important;
+}
+
+/* Ensure all content is visible */
+.lesson-page,
+.lesson-page * {
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: inherit;
+}
+
+/* Smooth unified box styling - all use same background and border */
+.lesson-section,
+.exercise,
+.audio-container,
+.transcript-container pre,
+.vocabulary-container li,
+.grammar-container li,
+.tips-container li,
+.matching-pair {
+  background: var(--white) !important;
+  border: 2px solid var(--light-gray) !important;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.lesson-section:hover,
+.exercise:hover,
+.matching-pair:hover {
+  border-color: var(--black) !important;
+  box-shadow: 0 8px 30px rgba(92, 74, 50, 0.12) !important;
 }
 
 @keyframes fadeIn {
@@ -33,16 +87,27 @@
 }
 
 .lesson-container {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
+  background: var(--white) !important;
   border-radius: 24px;
-  padding: 50px;
-  margin-bottom: 30px;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  padding: 5rem;
+  margin-bottom: 3rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  overflow-y: visible;
+  overflow-x: hidden;
+  border: 2px solid var(--light-gray);
+  color: var(--black);
+}
+
+/* Unify all boxes to use the same background */
+.lesson-section,
+.exercise,
+.audio-container,
+.transcript-container pre,
+.vocabulary-container li,
+.grammar-container li,
+.tips-container li,
+.matching-pair {
+  background: var(--white);
 }
 
 @keyframes slideUp {
@@ -57,10 +122,10 @@
 }
 
 .lesson-header {
-  text-align: center;
-  margin-bottom: 50px;
-  padding-bottom: 40px;
-  border-bottom: 2px solid rgba(0, 128, 128, 0.1);
+  text-align: left;
+  margin-bottom: 4rem;
+  padding-bottom: 3rem;
+  border-bottom: 2px solid var(--light-gray);
   position: relative;
 }
 
@@ -68,24 +133,21 @@
   content: '';
   position: absolute;
   bottom: -2px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px;
+  left: 0;
+  width: 120px;
   height: 4px;
-  background: var(--gradient-primary);
+  background: var(--black);
   border-radius: 2px;
 }
 
 .lesson-title {
-  font-size: 2.8rem;
-  margin-bottom: 20px;
-  font-weight: 800;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  position: relative;
-  display: inline-block;
+  font-size: clamp(3rem, 6vw, 5rem);
+  margin-bottom: 1.5rem;
+  font-weight: 900;
+  color: var(--black);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  opacity: 1 !important;
 }
 
 .lesson-title::after {
@@ -96,7 +158,7 @@
   transform: translateX(-50%);
   width: 80px;
   height: 4px;
-  background: var(--gradient-primary);
+  background: var(--black);
   border-radius: 2px;
   animation: lineExpand 0.8s ease-out 0.5s both;
 }
@@ -111,14 +173,12 @@
 }
 
 .lesson-description {
-  color: #666;
+  color: var(--black);
   font-size: 1.3rem;
-  line-height: 1.6;
-  max-width: 700px;
-  margin: 0 auto;
+  line-height: 1.7;
+  max-width: 800px;
   font-weight: 500;
-  opacity: 0;
-  animation: fadeInUp 0.6s ease-out 0.3s both;
+  opacity: 1 !important;
 }
 
 @keyframes fadeInUp {
@@ -139,15 +199,9 @@
 }
 
 .lesson-section {
-  background: linear-gradient(135deg, #ffffff, #f8fdfc);
-  border-radius: 20px;
-  padding: 35px;
-  border: 2px solid rgba(0, 128, 128, 0.1);
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  padding: 3rem;
   position: relative;
-  overflow: hidden;
-  opacity: 0;
-  animation: fadeInUp 0.6s ease-out both;
+  opacity: 1 !important;
 }
 
 .lesson-section:nth-child(1) { animation-delay: 0.4s; }
@@ -164,7 +218,7 @@
   height: 100%;
   background: linear-gradient(90deg, 
     transparent, 
-    rgba(0, 179, 179, 0.05), 
+    rgba(212, 165, 116, 0.05), 
     transparent);
   transition: left 0.6s ease;
 }
@@ -174,30 +228,28 @@
 }
 
 .lesson-section:hover {
-  border-color: var(--teal-primary);
+  border-color: var(--black);
   box-shadow: 
-    0 8px 30px rgba(0, 128, 128, 0.15),
-    0 0 0 1px rgba(0, 128, 128, 0.1);
+    0 8px 30px rgba(92, 74, 50, 0.12),
+    0 0 0 1px rgba(212, 165, 116, 0.1);
   transform: translateY(-5px);
 }
 
 .lesson-section h2 {
-  font-size: 1.7rem;
-  margin-bottom: 25px;
-  font-weight: 700;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  margin-bottom: 2rem;
+  font-weight: 800;
+  color: var(--black);
   display: flex;
   align-items: center;
-  gap: 14px;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  gap: 1rem;
+  opacity: 1 !important;
 }
 
 .lesson-section h2 svg {
-  color: var(--teal-primary);
-  filter: drop-shadow(0 2px 4px rgba(0, 128, 128, 0.3));
-  transition: all 0.3s ease;
+  color: var(--black);
+  font-size: 1.8rem;
+  opacity: 1 !important;
 }
 
 .lesson-section:hover h2 svg {
@@ -205,39 +257,41 @@
 }
 
 .lesson-section ul {
-  color: #4a5568;
-  font-size: 1.15rem;
-  line-height: 1.7;
-  margin-bottom: 0;
-  padding-left: 24px;
+  color: var(--black);
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin: 0;
+  padding-left: 2rem;
+  list-style: none;
 }
 
 .lesson-section li {
-  margin-bottom: 14px;
+  margin-bottom: 1rem;
   position: relative;
-  transition: all 0.3s ease;
+  padding-left: 1.5rem;
+  font-weight: 500;
+  opacity: 1 !important;
 }
 
 .lesson-section li::before {
   content: '▸';
-  color: var(--teal-primary);
+  color: var(--black);
   font-weight: bold;
   position: absolute;
-  left: -20px;
-  transition: all 0.3s ease;
+  left: 0;
 }
 
 .lesson-section li:hover::before {
   transform: translateX(3px);
-  color: var(--teal-light);
+  color: var(--black);
 }
 
 .audio-container {
   text-align: center;
-  padding: 25px;
-  background: linear-gradient(135deg, #f0fffa, #e0fff5);
+  padding: 3rem;
+  background: var(--white);
   border-radius: 16px;
-  border: 2px solid rgba(0, 128, 128, 0.1);
+  border: 2px solid var(--light-gray);
 }
 
 .audio-container audio {
@@ -251,38 +305,39 @@
 }
 
 .audio-container audio:hover {
-  box-shadow: 0 6px 20px rgba(0, 128, 128, 0.2);
+  box-shadow: 0 6px 20px rgba(92, 74, 50, 0.15);
 }
 
 .transcript-container pre {
-  background: linear-gradient(135deg, #ffffff, #f8fdfc);
-  border: 2px solid rgba(0, 128, 128, 0.1);
+  background: var(--white);
+  border: 2px solid var(--light-gray);
   border-radius: 16px;
-  padding: 25px;
-  margin-top: 15px;
+  padding: 2.5rem;
+  margin-top: 1.5rem;
   font-size: 1.05rem;
-  line-height: 1.6;
-  color: #4a5568;
+  line-height: 1.7;
+  color: var(--black);
   white-space: pre-wrap;
   word-wrap: break-word;
-  transition: all 0.3s ease;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: inherit;
+  opacity: 1 !important;
 }
 
 .transcript-container pre:hover {
-  border-color: var(--teal-primary);
-  box-shadow: 0 4px 15px rgba(0, 128, 128, 0.1);
+  border-color: var(--black);
+  box-shadow: 0 4px 15px rgba(92, 74, 50, 0.1);
 }
 
-.vocabulary-container li {
-  background: linear-gradient(135deg, #ffffff, #f0fffa);
-  padding: 18px 20px;
-  border-radius: 14px;
-  margin-bottom: 14px;
-  border: 2px solid rgba(0, 128, 128, 0.1);
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  position: relative;
-  overflow: hidden;
+.vocabulary-container li,
+.grammar-container li,
+.tips-container li {
+  background: var(--white);
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  border: 2px solid var(--light-gray);
+  transition: all 0.3s ease;
+  opacity: 1 !important;
 }
 
 .vocabulary-container li::before {
@@ -294,43 +349,34 @@
   height: 100%;
   background: linear-gradient(90deg, 
     transparent, 
-    rgba(0, 179, 179, 0.1), 
+    rgba(212, 165, 116, 0.05), 
     transparent);
   transition: left 0.6s ease;
 }
 
-.vocabulary-container li:hover::before {
-  left: 100%;
+.vocabulary-container li:hover,
+.grammar-container li:hover,
+.tips-container li:hover {
+  border-color: var(--black);
+  transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(92, 74, 50, 0.1);
 }
 
-.vocabulary-container li:hover {
-  border-color: var(--teal-primary);
-  transform: translateX(8px) translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 128, 128, 0.15);
-}
-
-.vocabulary-container strong {
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.lesson-section li strong {
+  color: var(--black);
   font-weight: 700;
+  opacity: 1 !important;
 }
 
 .exercises-container {
-  background: linear-gradient(135deg, #ffffff, #f8fdfc);
+  background: transparent;
+  border: none;
+  padding: 0;
 }
 
 .exercise {
-  background: linear-gradient(135deg, #f0fffa, #e0fff5);
-  border-radius: 18px;
-  padding: 30px;
-  margin-bottom: 30px;
-  border: 2px solid rgba(0, 128, 128, 0.1);
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  position: relative;
-  overflow: hidden;
-  animation: slideIn 0.6s ease-out both;
+  padding: 3rem;
+  margin-bottom: 2rem;
 }
 
 .exercise::before {
@@ -342,7 +388,7 @@
   height: 100%;
   background: linear-gradient(90deg, 
     transparent, 
-    rgba(0, 179, 179, 0.05), 
+    rgba(212, 165, 116, 0.05), 
     transparent);
   transition: left 0.6s ease;
 }
@@ -352,37 +398,35 @@
 }
 
 .exercise:hover {
-  border-color: var(--teal-light);
-  box-shadow: 0 8px 30px rgba(0, 179, 179, 0.15);
+  border-color: var(--black);
+  box-shadow: 0 8px 30px rgba(92, 74, 50, 0.12);
   transform: translateY(-3px);
 }
 
 .exercise p {
-  color: #2d3748;
+  color: var(--black);
   font-size: 1.2rem;
   font-weight: 600;
-  margin-bottom: 25px;
+  margin-bottom: 1.5rem;
   line-height: 1.6;
-  position: relative;
-  z-index: 2;
+  opacity: 1 !important;
 }
 
 .option-btn {
   display: block;
   width: 100%;
-  background: white;
-  border: 2px solid rgba(0, 128, 128, 0.2);
-  border-radius: 14px;
-  padding: 18px 24px;
-  margin-bottom: 14px;
+  background: var(--white);
+  border: 2px solid var(--light-gray);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
   font-size: 1.05rem;
-  color: #2d3748;
+  color: var(--black);
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: all 0.3s ease;
   text-align: left;
-  position: relative;
-  overflow: hidden;
-  font-weight: 500;
+  font-weight: 600;
+  opacity: 1 !important;
 }
 
 .option-btn::before {
@@ -394,7 +438,7 @@
   height: 100%;
   background: linear-gradient(90deg, 
     transparent, 
-    rgba(0, 179, 179, 0.1), 
+    rgba(212, 165, 116, 0.05), 
     transparent);
   transition: left 0.6s ease;
 }
@@ -404,33 +448,28 @@
 }
 
 .option-btn:hover {
-  border-color: var(--teal-light);
-  background: rgba(0, 179, 179, 0.05);
-  transform: translateY(-3px) translateX(5px);
-  box-shadow: 0 6px 20px rgba(0, 179, 179, 0.1);
+  border-color: var(--black);
+  background: var(--light-gray);
+  transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(92, 74, 50, 0.1);
 }
 
 .option-btn.selected {
-  background: rgba(0, 179, 179, 0.1);
-  border-color: var(--teal-light);
-  color: var(--teal-dark);
-  transform: translateX(8px);
-  box-shadow: 0 4px 15px rgba(0, 179, 179, 0.15);
+  background: var(--light-gray);
+  border-color: var(--black);
+  color: var(--black);
 }
 
 .option-btn.correct {
-  background: linear-gradient(135deg, #48bb78, #38a169);
-  color: white;
-  border-color: #48bb78;
-  transform: scale(1.02);
-  animation: correctPulse 0.6s ease;
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
 }
 
 .option-btn.incorrect {
-  background: linear-gradient(135deg, #f56565, #e53e3e);
-  color: white;
-  border-color: #f56565;
-  transform: scale(0.98);
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #dc2626;
 }
 
 @keyframes correctPulse {
@@ -441,29 +480,29 @@
 
 .exercise input[type="text"] {
   width: 100%;
-  max-width: 350px;
-  padding: 16px 22px;
-  border: 2px solid rgba(0, 128, 128, 0.2);
-  border-radius: 14px;
+  max-width: 400px;
+  padding: 1rem 1.25rem;
+  border: 2px solid var(--light-gray);
+  border-radius: 12px;
   font-size: 1.05rem;
-  color: #2d3748;
-  background: white;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  margin-right: 18px;
-  font-weight: 500;
+  color: var(--black);
+  background: var(--white);
+  transition: all 0.3s ease;
+  margin-right: 1rem;
+  font-weight: 600;
+  opacity: 1 !important;
 }
 
 .exercise input[type="text"]:focus {
   outline: none;
-  border-color: var(--teal-light);
-  box-shadow: 
-    0 0 0 4px rgba(0, 179, 179, 0.1),
-    0 4px 15px rgba(0, 179, 179, 0.1);
-  transform: translateY(-2px);
+  border-color: var(--black);
+  box-shadow: 0 0 0 4px rgba(212, 165, 116, 0.1);
+  background: var(--light-gray);
 }
 
 .exercise input[type="text"]::placeholder {
-  color: #a0aec0;
+  color: var(--medium-gray);
+  opacity: 0.7;
 }
 
 .feedback {
@@ -478,67 +517,69 @@
 }
 
 .feedback.correct {
-  background: linear-gradient(135deg, #48bb78, #38a169);
-  color: white;
-  box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+  background: #d1fae5;
+  color: #065f46;
 }
 
 .feedback.incorrect {
-  background: linear-gradient(135deg, #f56565, #e53e3e);
-  color: white;
-  box-shadow: 0 4px 15px rgba(245, 101, 101, 0.3);
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.feedback svg {
+  opacity: 1 !important;
 }
 
 .tips-container {
-  background: linear-gradient(135deg, #f0fffa, #e0fff5);
-  border-color: var(--teal-lighter);
+  background: var(--white);
+  border-color: var(--light-gray);
 }
 
 .tips-container h2 {
-  color: var(--teal-dark);
+  color: var(--black);
 }
 
 .tips-container li {
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--white);
   border-radius: 12px;
-  padding: 14px 18px;
-  margin-bottom: 12px;
-  border: 2px solid var(--teal-lighter);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+  border: 2px solid var(--light-gray);
   transition: all 0.3s ease;
 }
 
 .tips-container li:hover {
+  border-color: var(--black);
   transform: translateX(5px);
-  box-shadow: 0 4px 15px rgba(0, 179, 179, 0.1);
+  box-shadow: 0 4px 15px rgba(92, 74, 50, 0.1);
 }
 
 .lesson-navigation {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 50px;
-  padding-top: 40px;
-  border-top: 2px solid rgba(0, 128, 128, 0.1);
+  margin-top: 3rem;
+  padding-top: 3rem;
+  border-top: 2px solid var(--light-gray);
 }
 
 .nav-button {
-  background: var(--gradient-primary);
-  color: white;
+  background: var(--black);
+  color: var(--white);
   border: none;
-  padding: 16px 32px;
-  border-radius: 16px;
-  font-size: 1.15rem;
+  padding: 1.25rem 2.5rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   display: flex;
   align-items: center;
-  gap: 10px;
-  box-shadow: 
-    0 6px 20px rgba(0, 128, 128, 0.25),
-    0 0 0 1px rgba(0, 128, 128, 0.1);
-  position: relative;
-  overflow: hidden;
+  gap: 0.75rem;
+  box-shadow: 0 6px 20px rgba(10, 8, 6, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 1 !important;
 }
 
 .nav-button::before {
@@ -559,12 +600,22 @@
   left: 100%;
 }
 
-.nav-button:hover {
-  transform: translateY(-4px);
-  box-shadow: 
-    0 10px 30px rgba(0, 128, 128, 0.35),
-    0 0 0 1px rgba(0, 128, 128, 0.2);
-  background: var(--gradient-secondary);
+.nav-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(10, 8, 6, 0.3);
+  background: var(--dark-brown);
+}
+
+.nav-button:disabled {
+  background: var(--light-gray);
+  color: var(--medium-gray);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.nav-button svg {
+  opacity: 1 !important;
 }
 
 .nav-button:active {
@@ -595,13 +646,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: white;
-  border: 2px solid rgba(0, 128, 128, 0.2);
-  border-radius: 16px;
-  padding: 20px 25px;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  position: relative;
-  overflow: hidden;
+  background: var(--white);
+  border: 2px solid var(--light-gray);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  transition: all 0.3s ease;
 }
 
 .matching-pair::before {
@@ -613,7 +662,7 @@
   height: 100%;
   background: linear-gradient(90deg, 
     transparent, 
-    rgba(0, 179, 179, 0.05), 
+    rgba(212, 165, 116, 0.05), 
     transparent);
   transition: left 0.6s ease;
 }
@@ -623,38 +672,36 @@
 }
 
 .matching-pair:hover {
-  border-color: var(--teal-light);
-  box-shadow: 0 6px 20px rgba(0, 179, 179, 0.1);
-  transform: translateY(-2px);
+  border-color: var(--black);
+  box-shadow: 0 4px 15px rgba(92, 74, 50, 0.1);
 }
 
 .match-word {
   font-weight: 700;
-  color: #2d3748;
+  color: var(--black);
   font-size: 1.1rem;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  opacity: 1 !important;
 }
 
 .matching-pair select {
-  padding: 12px 18px;
-  border-radius: 14px;
-  border: 2px solid rgba(0, 128, 128, 0.2);
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  border: 2px solid var(--light-gray);
   font-size: 1.05rem;
-  color: #2d3748;
-  background: white;
+  color: var(--black);
+  background: var(--white);
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 200px;
-  font-weight: 500;
+  min-width: 250px;
+  font-weight: 600;
+  opacity: 1 !important;
 }
 
 .matching-pair select:focus {
   outline: none;
-  border-color: var(--teal-light);
-  box-shadow: 0 0 0 3px rgba(0, 179, 179, 0.1);
+  border-color: var(--black);
+  box-shadow: 0 0 0 4px rgba(212, 165, 116, 0.1);
+  background: var(--light-gray);
 }
 
 .submit-answers-container {
@@ -663,18 +710,19 @@
 }
 
 .submit-answers-btn {
-  background: var(--gradient-primary);
-  color: white;
+  background: var(--black);
+  color: var(--white);
   font-weight: 700;
   border: none;
-  border-radius: 16px;
-  padding: 16px 32px;
-  font-size: 1.15rem;
+  border-radius: 8px;
+  padding: 1.25rem 2.5rem;
+  font-size: 1.1rem;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  box-shadow: 0 6px 20px rgba(0, 128, 128, 0.25);
-  position: relative;
-  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 6px 20px rgba(10, 8, 6, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 1 !important;
 }
 
 .submit-answers-btn::before {
@@ -696,9 +744,9 @@
 }
 
 .submit-answers-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(0, 128, 128, 0.35);
-  background: var(--gradient-secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(10, 8, 6, 0.3);
+  background: var(--dark-brown);
 }
 
 .submit-answers-btn:active {
@@ -711,21 +759,22 @@
 }
 
 .back-to-lessons-btn {
-  background: var(--gradient-primary);
-  color: white;
+  background: var(--black);
+  color: var(--white);
   font-weight: 700;
   border: none;
-  border-radius: 14px;
-  padding: 12px 24px;
-  font-size: 1.05rem;
+  border-radius: 8px;
+  padding: 1rem 2rem;
+  font-size: 1rem;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  box-shadow: 0 4px 15px rgba(0, 128, 128, 0.2);
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  position: relative;
-  overflow: hidden;
+  gap: 0.75rem;
+  box-shadow: 0 4px 15px rgba(10, 8, 6, 0.2);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 1 !important;
 }
 
 .back-to-lessons-btn::before {
@@ -747,9 +796,13 @@
 }
 
 .back-to-lessons-btn:hover {
-  transform: translateY(-3px) translateX(-3px);
-  box-shadow: 0 8px 25px rgba(0, 128, 128, 0.3);
-  background: var(--gradient-secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(10, 8, 6, 0.3);
+  background: var(--dark-brown);
+}
+
+.back-to-lessons-btn svg {
+  opacity: 1 !important;
 }
 
 /* Loading and error states */
@@ -758,13 +811,10 @@
   justify-content: center;
   align-items: center;
   min-height: 400px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
+  background: var(--white);
   border-radius: 24px;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  border: 2px solid var(--light-gray);
   animation: pulse 2s ease-in-out infinite;
 }
 
@@ -774,25 +824,20 @@
   text-align: center;
 }
 
-.loading-text {
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
+.loading-text,
 .error-text {
-  background: linear-gradient(135deg, #f56565, #e53e3e);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--black);
+  opacity: 1 !important;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .lesson-page {
-    padding: 15px;
-    background: var(--gradient-primary);
+    padding: 2rem;
+    background: var(--white) !important;
   }
 
   .lesson-container {
@@ -867,57 +912,57 @@
   }
 }
 
-/* Dark mode support */
+/* Dark mode support - using solid colors instead of gradients */
 @media (prefers-color-scheme: dark) {
   .lesson-page {
-    background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+    background: var(--white) !important;
   }
 
   .lesson-container,
   .loading-container,
   .error-container {
-    background: rgba(45, 55, 72, 0.95);
-    border-color: rgba(74, 85, 104, 0.3);
-    color: #e2e8f0;
+    background: var(--white) !important;
+    border-color: var(--light-gray);
+    color: var(--black);
   }
 
   .lesson-section {
-    background: linear-gradient(135deg, #4a5568, #2d3748);
+    background: var(--white) !important;
   }
 
   .lesson-section h2 {
-    color: #f7fafc;
+    color: var(--black);
   }
 
   .transcript-container pre {
-    background: #2d3748;
-    color: #e2e8f0;
+    background: var(--white) !important;
+    color: var(--black);
   }
 
   .vocabulary-container li {
-    background: #4a5568;
+    background: var(--white) !important;
   }
 
   .exercise {
-    background: #4a5568;
+    background: var(--white) !important;
   }
 
   .option-btn {
-    background: #2d3748;
-    color: #e2e8f0;
+    background: var(--white) !important;
+    color: var(--black);
   }
 
   .exercise input[type="text"] {
-    background: #2d3748;
-    color: #e2e8f0;
+    background: var(--white) !important;
+    color: var(--black);
   }
 
   .matching-pair {
-    background: #4a5568;
+    background: var(--white) !important;
   }
 
   .matching-pair select {
-    background: #2d3748;
-    color: #e2e8f0;
+    background: var(--white) !important;
+    color: var(--black);
   }
 }

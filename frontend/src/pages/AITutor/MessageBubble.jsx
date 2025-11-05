@@ -1,5 +1,6 @@
 import React from 'react';
-import './MessageBubble.css'
+import { FaRobot } from 'react-icons/fa';
+import './MessageBubble.css';
 
 export default function MessageBubble({ message }) {
   if (!message) {
@@ -22,7 +23,6 @@ export default function MessageBubble({ message }) {
     grammar_corrections 
   } = message;
 
-
   let cleanText = text;
   if (typeof text === 'string') {
     try {
@@ -35,42 +35,49 @@ export default function MessageBubble({ message }) {
     }
   }
 
+  const isUser = sender === 'user';
+
   return (
-    <div className={`message-bubble ${sender === 'user' ? 'user-message' : 'tutor-message'}`}>
-      <div className="message-header">
+    <div className={`message-group ${isUser ? 'user-group' : 'ai-group'}`}>
+      <div className="message-wrapper">
         <div className="message-avatar">
-          {sender === 'user' ? '👤' : '🤖'}
-        </div>
-        <div className="message-info">
-          <span className="message-sender">{sender === 'user' ? 'You' : 'ALEX'}</span>
-          {created_at && (
-            <span className="message-time">
-              {new Date(created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-            </span>
+          {isUser ? (
+            <div className="user-avatar">U</div>
+          ) : (
+            <div className="ai-avatar">
+              <FaRobot />
+            </div>
           )}
         </div>
-      </div>
-
-      <div className="message-content">
-        <p>{cleanText}</p>
-
-        {amharic_translation && (
-          <div className="translation-content">
-            <strong>Amharic:</strong> {amharic_translation}
+        <div className="message-content-wrapper">
+          <div className={`message-content ${isUser ? 'user-message' : 'ai-message'}`}>
+            <div className="message-text">
+              {cleanText.split('\n').map((line, index) => (
+                <p key={index}>{line || '\u00A0'}</p>
+              ))}
+            </div>
+            
+            {(amharic_translation || pronunciation_tips || grammar_corrections) && (
+              <div className="message-extras">
+                {amharic_translation && (
+                  <div className="extra-item">
+                    <strong>Translation:</strong> {amharic_translation}
+                  </div>
+                )}
+                {pronunciation_tips && (
+                  <div className="extra-item">
+                    <strong>Pronunciation:</strong> {pronunciation_tips}
+                  </div>
+                )}
+                {grammar_corrections && (
+                  <div className="extra-item">
+                    <strong>Grammar:</strong> {grammar_corrections}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-        )}
-
-        {pronunciation_tips && (
-          <div className="pronunciation-tips">
-            <strong>Pronunciation:</strong> {pronunciation_tips}
-          </div>
-        )}
-
-        {grammar_corrections && (
-          <div className="grammar-notes">
-            <strong>Grammar:</strong> {grammar_corrections}
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );

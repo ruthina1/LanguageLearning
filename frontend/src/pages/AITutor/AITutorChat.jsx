@@ -6,15 +6,13 @@ import GrammarAssistant from './GrammarAssistant';
 import PronunciationCoach from './PronunciationCoach';
 import { 
   FaRobot, 
-  FaComment, 
-  FaEdit, 
-  FaMicrophone, 
-  FaTrash, 
-  FaPaperPlane, 
-  FaHourglassHalf,
-  FaBook,
-  FaLightbulb,
-  FaPlus
+  FaPlus,
+  FaTrash,
+  FaPaperPlane,
+  FaBars,
+  FaEdit,
+  FaMicrophone,
+  FaComment
 } from 'react-icons/fa';
 import './AITutorChat.css';
 
@@ -22,7 +20,7 @@ export default function AITutorChat() {
   const { 
     currentConversation, 
     isProcessing, 
-    sendMessage,  // This is from your context
+    sendMessage,
     clearConversation,
     startNewConversation,
     conversations,
@@ -31,7 +29,8 @@ export default function AITutorChat() {
   
   const { user } = useAuth();
   const [message, setMessage] = useState('');
-  const [activeTab, setActiveTab] = useState('chat');
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [currentView, setCurrentView] = useState('chat'); // 'chat', 'grammar', 'pronunciation'
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -42,33 +41,15 @@ export default function AITutorChat() {
     scrollToBottom();
   }, [currentConversation?.messages]);
 
-  // REMOVE THIS DUPLICATE FUNCTION - You already have sendMessage from context
-  // const handleSendMessage = async (messageText, currentConversationId = null) => {
-  //   try {
-  //     const response = await aiTutorAPI.sendMessage({
-  //       message: messageText,
-  //       conversationId: currentConversationId,
-  //       sender: 'user'
-  //     });
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error('Failed to send message:', error);
-  //     throw error;
-  //   }
-  // };
-
-  // CORRECTED: Form submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!message.trim() || isProcessing) return;
 
     try {
-      console.log('📤 Sending message:', message, 'to conversation:', currentConversation?.id);
       await sendMessage(message, currentConversation?.id);
-      setMessage(''); // Clear input after sending
+      setMessage('');
     } catch (error) {
-      console.error('❌ Failed to send message:', error);
-      // You might want to show an error message to the user here
+      console.error('Failed to send message:', error);
     }
   };
 
@@ -80,171 +61,174 @@ export default function AITutorChat() {
 
   const handleNewChat = () => {
     startNewConversation();
+    setCurrentView('chat');
   };
 
-  const quickQuestions = [
-    "Explain present perfect tense",
-    "What's the difference between 'make' and 'do'?",
-    "Help me with pronunciation of 'th' sounds",
-    "Give me a conversation practice",
-    "Correct this sentence for me"
-  ];
+  const renderMainContent = () => {
+    if (currentView === 'grammar') {
+      return <GrammarAssistant />;
+    }
+    
+    if (currentView === 'pronunciation') {
+      return <PronunciationCoach />;
+    }
 
-  const renderChatInterface = () => (
-    <div className="chat-interface">
-      {/* Conversation Sidebar */}
-      <div className="conversation-sidebar">
-        <div className="conversation-list">
-          {conversations.map(conv => (
-            <div 
-              key={conv.id}
-              className={`conversation-item ${currentConversation?.id === conv.id ? 'active' : ''}`}
-              onClick={() => loadConversation(conv.id)}
-            >
-              <div className="conversation-title">{conv.title}</div>
-              <div className="conversation-preview">
-                {conv.last_message || 'No messages yet'}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Main Chat Area */}
-      <div className="chat-main">
+    // Chat view - always show input
+    return (
+      <>
         <div className="messages-container">
           {(!currentConversation || currentConversation.messages.length === 0) ? (
-            <div className="welcome-message">
-              <div className="tutor-avatar"><FaRobot /></div>
-              <div className="welcome-content">
-                <h3>Hello! I'm ALEX, your AI English Tutor</h3>
-                <p>I'm here to help you learn English. You can:</p>
-                <ul>
-                  <li><FaComment /> Practice conversations</li>
-                  <li><FaEdit /> Get grammar corrections</li>
-                  <li><FaMicrophone /> Improve pronunciation</li>
-                  <li><FaBook /> Ask any English questions</li>
-                </ul>
-                <p>What would you like to work on today?</p>
+            <div className="welcome-screen">
+              <div className="welcome-icon">
+                <FaRobot />
+              </div>
+              <h2>How can I help you today?</h2>
+              <div className="welcome-actions">
+                <button 
+                  className="welcome-action-btn"
+                  onClick={() => setCurrentView('grammar')}
+                >
+                  <FaEdit /> Grammar Assistant
+                </button>
+                <button 
+                  className="welcome-action-btn"
+                  onClick={() => setCurrentView('pronunciation')}
+                >
+                  <FaMicrophone /> Pronunciation Coach
+                </button>
               </div>
             </div>
           ) : (
-            currentConversation.messages.map((msg, index) => (
-              <MessageBubble key={msg.id || index} message={msg} />
-            ))
-          )}
-          {isProcessing && (
-            <div className="typing-indicator">
-              <div className="tutor-avatar"><FaRobot /></div>
-              <div className="typing-dots">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
+            <div className="messages-list">
+              {currentConversation.messages.map((msg, index) => (
+                <MessageBubble key={msg.id || index} message={msg} />
+              ))}
+              {isProcessing && (
+                <div className="typing-indicator">
+                  <div className="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
             </div>
           )}
-          <div ref={messagesEndRef} />
         </div>
 
-       <div className="quick-questions">
-          <h4>Quick Questions:</h4>
-          <div className="question-chips">
-            {quickQuestions.map((question, index) => (
-              <button
-                key={index}
-                className="question-chip"
-                onClick={() => sendMessage(question)} 
+        {/* Input Area - Always visible in chat view */}
+        <div className="input-area">
+          <form onSubmit={handleSubmit} className="message-form">
+            <div className="input-wrapper">
+              <textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSubmit(e);
+                  }
+                }}
+                placeholder="Message ALEX..."
                 disabled={isProcessing}
+                rows="1"
+                className="message-textarea"
+              />
+              <button 
+                type="submit" 
+                disabled={isProcessing || !message.trim()} 
+                className="send-btn"
               >
-                {question}
+                <FaPaperPlane />
               </button>
-            ))}
+            </div>
+          </form>
+          <div className="input-footer">
+            <p>ALEX can make mistakes. Check important info.</p>
           </div>
         </div>
-
-        <form onSubmit={handleSubmit} className="message-input-form">
-          <div className="input-container">
-            <input
-              type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Ask me anything about English..."
-              disabled={isProcessing}
-              className="message-input"
-            />
-            <button type="submit" disabled={isProcessing || !message.trim()} className="send-button">
-              {isProcessing ? <FaHourglassHalf /> : <FaPaperPlane />}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
+      </>
+    );
+  };
 
   return (
-    <div className="ai-tutor-page">
-      <div className="tutor-header">
-        <div className="header-content">
-          <h1><FaRobot /> ALEX - AI English Tutor</h1>
-          <p>Your personal English learning assistant</p>
-        </div>
-        <div className="header-actions">
-          {currentConversation && (
-            <button onClick={handleClearChat} className="clear-chat-btn">
-              <FaTrash /> Clear Chat
+    <div className="chatgpt-container">
+      {/* Sidebar */}
+      {sidebarOpen && (
+        <div className="chatgpt-sidebar">
+          <div className="sidebar-header">
+            <button className="new-chat-btn" onClick={handleNewChat}>
+              <FaPlus /> New chat
             </button>
+          </div>
+
+          {/* View Navigation */}
+          <div className="view-navigation">
+            <button 
+              className={`view-nav-item ${currentView === 'chat' ? 'active' : ''}`}
+              onClick={() => setCurrentView('chat')}
+            >
+              <FaComment /> Chat
+            </button>
+            <button 
+              className={`view-nav-item ${currentView === 'grammar' ? 'active' : ''}`}
+              onClick={() => setCurrentView('grammar')}
+            >
+              <FaEdit /> Grammar
+            </button>
+            <button 
+              className={`view-nav-item ${currentView === 'pronunciation' ? 'active' : ''}`}
+              onClick={() => setCurrentView('pronunciation')}
+            >
+              <FaMicrophone /> Pronunciation
+            </button>
+          </div>
+          
+          {/* Conversations List - only show in chat view */}
+          {currentView === 'chat' && (
+            <div className="conversations-list">
+              {conversations.map(conv => (
+                <div 
+                  key={conv.id}
+                  className={`conversation-item ${currentConversation?.id === conv.id ? 'active' : ''}`}
+                  onClick={() => loadConversation(conv.id)}
+                >
+                  <span className="conversation-text">{conv.title || 'New Conversation'}</span>
+                  {currentConversation?.id === conv.id && (
+                    <button 
+                      className="delete-conv-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleClearChat();
+                      }}
+                    >
+                      <FaTrash />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
           )}
         </div>
-      </div>
+      )}
 
-      <div className="tutor-navigation">
-        <button 
-          className={`nav-btn ${activeTab === 'chat' ? 'active' : ''}`}
-          onClick={() => setActiveTab('chat')}
-        >
-          <FaComment /> Chat Tutor
-        </button>
-        <button 
-          className={`nav-btn ${activeTab === 'grammar' ? 'active' : ''}`}
-          onClick={() => setActiveTab('grammar')}
-        >
-          <FaEdit /> Grammar Assistant
-        </button>
-        <button 
-          className={`nav-btn ${activeTab === 'pronunciation' ? 'active' : ''}`}
-          onClick={() => setActiveTab('pronunciation')}
-        >
-          <FaMicrophone /> Pronunciation Coach
-        </button>
-      </div>
-
-      <div className="tutor-content">
-        {activeTab === 'chat' && renderChatInterface()}
-        {activeTab === 'grammar' && <GrammarAssistant />}
-        {activeTab === 'pronunciation' && <PronunciationCoach />}
-      </div>
-
-      <div className="tutor-sidebar">
-        <div className="user-progress">
-          <h3>Your AI Progress</h3>
-          <div className="progress-item">
-            <span>Level {user?.aiProgress?.level || 1}</span>
-            <span>{user?.aiProgress?.xp || 0} XP</span>
-          </div>
-          <div className="progress-item">
-            <span>Current Streak</span>
-            <span>{user?.aiProgress?.streak || 0} days</span>
-          </div>
+      {/* Main Chat Area */}
+      <div className="chatgpt-main">
+        {/* Top Bar */}
+        <div className="chatgpt-topbar">
+          <button 
+            className="sidebar-toggle"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
+            <FaBars />
+          </button>
+          <h1>ALEX</h1>
         </div>
 
-        <div className="tutor-tips">
-          <h3><FaLightbulb /> Learning Tips</h3>
-          <ul>
-            <li>Practice daily for 15-30 minutes</li>
-            <li>Don't be afraid to make mistakes</li>
-            <li>Repeat difficult words aloud</li>
-            <li>Use new vocabulary in sentences</li>
-          </ul>
+        {/* Main Content */}
+        <div className="main-content-area">
+          {renderMainContent()}
         </div>
       </div>
     </div>

@@ -1,14 +1,12 @@
-/* Shoprooof-inspired color palette */
+/* Black & White Color Palette */
 :root {
-  --cream: #f8f6f3;
-  --beige: #e8e3dc;
-  --warm-beige: #d4a574;
-  --brown: #6b5842;
-  --dark-brown: #4a3d2e;
-  --charcoal: #0a0806;
-  --text-light: #3a342c;
-  --text-dark: #0a0806;
-  --accent: #b8926a;
+  --white: #ffffff;
+  --black: #000000;
+  --dark-gray: #1a1a1a;
+  --medium-gray: #666666;
+  --light-gray: #e5e5e5;
+  --lighter-gray: #f5f5f5;
+  --border-gray: #cccccc;
 }
 
 * {
@@ -19,8 +17,8 @@
 
 .home-page {
   position: relative;
-  background: var(--cream);
-  color: var(--text-dark);
+  background: var(--white);
+  color: var(--black);
   overflow-x: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
@@ -96,7 +94,7 @@
   justify-content: center;
   padding: 8rem 8rem 8rem 15rem;
   position: relative;
-  background: var(--cream);
+  background: var(--white);
 }
 
 .hero-content {
@@ -348,7 +346,7 @@ section[data-section] {
 
 /* Features Section - Restaurant Gem Style */
 .features-section {
-  background: var(--cream);
+  background: var(--white);
   padding: 10rem 0;
 }
 
@@ -435,7 +433,7 @@ section[data-section] {
 
 .feature-number {
   font-size: 1rem;
-  color: var(--warm-beige);
+  color: var(--black);
   font-weight: 600;
   letter-spacing: 0.2em;
   margin-bottom: 1.5rem;
@@ -445,7 +443,7 @@ section[data-section] {
 .feature-subtitle {
   display: block;
   font-size: 0.9rem;
-  color: var(--warm-beige);
+  color: var(--black);
   text-transform: uppercase;
   letter-spacing: 0.15em;
   font-weight: 600;
@@ -455,7 +453,7 @@ section[data-section] {
 .feature-title-large {
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 900;
-  color: var(--charcoal);
+  color: var(--black);
   line-height: 1.1;
   margin-bottom: 2rem;
   letter-spacing: -0.02em;
@@ -464,7 +462,7 @@ section[data-section] {
 .feature-description-large {
   font-size: 1.2rem;
   line-height: 1.8;
-  color: var(--text-light);
+  color: var(--medium-gray);
   margin-bottom: 3rem;
   font-weight: 400;
 }
@@ -472,7 +470,7 @@ section[data-section] {
 .feature-icon-large {
   width: 80px;
   height: 80px;
-  background: var(--warm-beige);
+  background: var(--black);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -489,7 +487,7 @@ section[data-section] {
   padding: 1rem 2rem;
   background: transparent;
   border: 2px solid var(--charcoal);
-  color: var(--charcoal);
+  color: var(--black);
   font-size: 1rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -514,7 +512,7 @@ section[data-section] {
 
 /* Practice Section - Restaurant Gem Style */
 .practice-section {
-  background: var(--beige);
+  background: var(--lighter-gray);
   padding: 10rem 0;
 }
 
@@ -526,7 +524,7 @@ section[data-section] {
 }
 
 .practice-showcase-card {
-  background: var(--cream);
+  background: var(--white);
   border-radius: 24px;
   overflow: hidden;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
@@ -580,7 +578,7 @@ section[data-section] {
   align-items: center;
   justify-content: center;
   font-size: 2.5rem;
-  color: var(--warm-beige);
+  color: var(--black);
   backdrop-filter: blur(10px);
   opacity: 0;
   transition: all 0.5s ease;
@@ -598,7 +596,7 @@ section[data-section] {
 .practice-stats {
   display: inline-block;
   font-size: 0.85rem;
-  color: var(--warm-beige);
+  color: var(--black);
   text-transform: uppercase;
   letter-spacing: 0.15em;
   font-weight: 600;
@@ -611,7 +609,7 @@ section[data-section] {
 .practice-card-title {
   font-size: 2rem;
   font-weight: 900;
-  color: var(--charcoal);
+  color: var(--black);
   margin-bottom: 1rem;
   letter-spacing: -0.01em;
 }
@@ -619,7 +617,7 @@ section[data-section] {
 .practice-card-description {
   font-size: 1.1rem;
   line-height: 1.7;
-  color: var(--text-light);
+  color: var(--medium-gray);
   margin-bottom: 2rem;
 }
 
@@ -634,18 +632,18 @@ section[data-section] {
   align-items: center;
   gap: 0.75rem;
   font-size: 0.95rem;
-  color: var(--text-light);
+  color: var(--medium-gray);
   font-weight: 500;
 }
 
 .practice-feature svg {
-  color: var(--warm-beige);
+  color: var(--black);
   font-size: 0.85rem;
 }
 
 /* Testimonials Section - Restaurant Gem Style */
 .testimonials-section {
-  background: var(--cream);
+  background: var(--white);
   padding: 10rem 0;
 }
 
@@ -657,7 +655,7 @@ section[data-section] {
 }
 
 .testimonial-showcase-card {
-  background: var(--cream);
+  background: var(--white);
   border-radius: 24px;
   overflow: hidden;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
@@ -719,7 +717,7 @@ section[data-section] {
 
 .quote-icon-large {
   font-size: 3rem;
-  color: var(--warm-beige);
+  color: var(--black);
   opacity: 0.3;
   margin-bottom: 1.5rem;
 }
@@ -727,7 +725,7 @@ section[data-section] {
 .testimonial-text-large {
   font-size: 1.1rem;
   line-height: 1.8;
-  color: var(--text-light);
+  color: var(--medium-gray);
   margin-bottom: 2rem;
   font-style: italic;
   flex: 1;
@@ -742,7 +740,7 @@ section[data-section] {
 .author-name-large {
   font-size: 1.2rem;
   font-weight: 800;
-  color: var(--charcoal);
+  color: var(--black);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -756,7 +754,7 @@ section[data-section] {
 
 .author-role-large {
   font-size: 0.9rem;
-  color: var(--warm-beige);
+  color: var(--black);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -764,7 +762,7 @@ section[data-section] {
 
 .author-location {
   font-size: 0.85rem;
-  color: var(--text-light);
+  color: var(--medium-gray);
   font-weight: 400;
 }
 
@@ -865,7 +863,7 @@ section[data-section] {
 
 /* CTA Section */
 .cta-section {
-  background: var(--cream);
+  background: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -910,7 +908,7 @@ section[data-section] {
 }
 
 .cta-features .feature svg {
-  color: var(--warm-beige);
+  color: var(--black);
   font-size: 1.2rem;
 }
 

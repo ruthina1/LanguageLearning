@@ -1,8 +1,19 @@
+/* Color Variables - Black & White Palette */
+:root {
+  --white: #ffffff;
+  --black: #000000;
+  --dark-gray: #1a1a1a;
+  --medium-gray: #666666;
+  --light-gray: #e5e5e5;
+  --lighter-gray: #f5f5f5;
+  --border-gray: #cccccc;
+}
+
 .pronunciation-coach {
   padding: 25px;
-  background: white;
+  background: var(--white);
   border-radius: 15px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
 .coach-header {
@@ -13,7 +24,7 @@
 }
 
 .coach-header h2 {
-  color: #2d3748;
+  color: var(--black);
   font-size: 2rem;
   margin-bottom: 10px;
   font-weight: 700;
@@ -24,7 +35,7 @@
 }
 
 .coach-header p {
-  color: #718096;
+  color: var(--medium-gray);
   font-size: 1.1rem;
   margin: 0;
 }
@@ -51,17 +62,19 @@
 .phrase-input {
   width: 90%;
   padding: 15px 20px;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--light-gray);
   border-radius: 8px;
   font-size: 1rem;
-  background: white;
+  background: var(--light-gray);
   transition: all 0.3s ease;
+  color: var(--black);
 }
 
 .phrase-input:focus {
   outline: none;
-  border-color:linear-gradient(135deg, #43cea2 0%, #38ef7d 100%);
-  box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+  border-color: var(--black);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
 }
 
 .recording-section {
@@ -85,13 +98,15 @@
 }
 
 .record-btn {
-  background: linear-gradient(135deg, #43cea2 0%, #38ef7d 100%);
-  color: white;
+  background: var(--black);
+  color: var(--white);
 }
 
 .record-btn:hover {
+  background: var(--dark-gray);
+  color: var(--white);
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(67, 206, 162, 0.3);
+  box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
 }
 
 .stop-btn {
@@ -187,30 +202,30 @@
 }
 
 .phrase-chip {
-  background: white;
-  border: 2px solid #e2e8f0;
+  background: var(--white);
+  border: 2px solid var(--light-gray);
   padding: 10px 15px;
   border-radius: 20px;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  color: #4a5568;
+  color: var(--black);
 }
 
 .phrase-chip:hover {
-  border-color: #6a11cb;
-  background: white;
+  border-color: var(--black);
+  background: var(--light-gray);
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(106, 17, 203, 0.1);
+  box-shadow: 0 4px 12px rgba(212, 165, 116, 0.1);
 }
 
 /* Pronunciation Results Styles */
 .pronunciation-results {
   margin-top: 30px;
   padding: 25px;
-  background: #f8fafc;
+  background: var(--light-gray);
   border-radius: 12px;
-  border-left: 4px solid #6a11cb;
+  border-left: 4px solid var(--black);
 }
 
 .results-header {
@@ -223,7 +238,7 @@
 }
 
 .results-header h3 {
-  color: #2d3748;
+  color: var(--black);
   font-size: 1.5rem;
   margin: 0;
 }
@@ -241,8 +256,8 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-  color: white;
+  background: var(--black);
+  color: var(--black);
   text-align: center;
 }
 
@@ -250,6 +265,7 @@
   font-size: 1.8rem;
   font-weight: 700;
   line-height: 1;
+  color: white;
 }
 
 .score-label {
@@ -264,10 +280,10 @@
 }
 
 .strengths-section, .improvement-section, .mispronounced-words, .practice-exercises {
-  background: white;
+  background: var(--white);
   padding: 20px;
   border-radius: 8px;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--light-gray);
 }
 
 .strengths-section {
@@ -283,11 +299,11 @@
 }
 
 .practice-exercises {
-  border-left: 4px solid #4299e1;
+  border-left: 4px solid var(--black);
 }
 
 .strengths-section h4, .improvement-section h4, .mispronounced-words h4, .practice-exercises h4 {
-  color: #2d3748;
+  color: var(--black);
   margin-bottom: 15px;
   font-size: 1.1rem;
   display: flex;
@@ -429,7 +445,7 @@
   
   .phrase-input:focus {
     background: #2d3748;
-    border-color: #6a11cb;
+    border-color: #10a37f;
   }
   
   .phrase-chip {
@@ -499,17 +515,19 @@
 .spoken-input {
   width: 100%;
   padding: 15px 20px;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--light-gray);
   border-radius: 10px;
   font-size: 1rem;
-  background: white;
+  background: var(--light-gray);
   transition: all 0.3s ease;
+  color: var(--black);
 }
 
 .spoken-input:focus {
   outline: none;
-  border-color: #43cea2;
-  box-shadow: 0 0 0 3px rgba(67, 206, 162, 0.1);
+  border-color: var(--black);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
 }
 
 .spoken-text-input small {
@@ -526,8 +544,8 @@
 }
 
 .analyze-btn {
-  background: linear-gradient(135deg, #43cea2 0%, #38ef7d 100%);
-  color: white;
+  background: var(--black);
+  color: var(--black);
   border: none;
   padding: 15px 25px;
   border-radius: 10px;
@@ -541,8 +559,10 @@
 }
 
 .analyze-btn:hover:not(:disabled) {
+  background: var(--dark-gray);
+  color: var(--white);
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(67, 206, 162, 0.3);
+  box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
 }
 
 .analyze-btn:disabled {
@@ -579,9 +599,9 @@
 }
 
 .new-practice-btn {
-  background: #f7fafc;
-  border: 2px solid #e2e8f0;
-  color: #4a5568;
+  background: var(--light-gray);
+  border: 2px solid var(--light-gray);
+  color: var(--black);
   padding: 10px 20px;
   border-radius: 8px;
   font-size: 0.9rem;
@@ -593,8 +613,9 @@
 }
 
 .new-practice-btn:hover {
-  border-color: #43cea2;
-  color: #43cea2;
+  border-color: var(--black);
+  background: var(--white);
+  color: var(--black);
   transform: translateY(-1px);
 }
 
@@ -670,10 +691,10 @@
 }
 
 .similarity-check {
-  background: #f7fafc;
+  background: var(--light-gray);
   padding: 15px;
   border-radius: 8px;
-  border-left: 4px solid #4299e1;
+  border-left: 4px solid var(--black);
   margin-top: 15px;
 }
 

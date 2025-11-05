@@ -1,34 +1,53 @@
+/* Post Card - Restaurant Gem Style with Black & White Base */
+
+/* Color Variables - Black & White Palette */
+:root {
+  --white: #ffffff;
+  --black: #000000;
+  --dark-gray: #1a1a1a;
+  --medium-gray: #666666;
+  --light-gray: #e5e5e5;
+  --lighter-gray: #f5f5f5;
+  --border-gray: #cccccc;
+}
+
 .post-card {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e2e8f0;
+  background: var(--white);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--light-gray);
+  transition: all 0.3s ease;
+}
+
+.post-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .post-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 15px;
+  margin-bottom: 1rem;
 }
 
 .user-info {
   display: flex;
-  gap: 12px;
+  gap: 0.75rem;
 }
 
 .user-avatar {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  background: var(--black);
+  color: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
   flex-shrink: 0;
+  font-weight: 600;
 }
 
 .user-details {
@@ -37,122 +56,125 @@
 }
 
 .user-name {
-  font-weight: 600;
-  color: #2d3748;
+  font-weight: 700;
+  color: var(--black);
   font-size: 1.1rem;
 }
 
 .post-meta {
   display: flex;
-  gap: 10px;
-  margin-top: 4px;
+  gap: 0.625rem;
+  margin-top: 0.25rem;
   font-size: 0.9rem;
-  color: #718096;
+  color: var(--medium-gray);
 }
 
 .user-level {
-  background: #e2e8f0;
-  padding: 2px 8px;
+  background: var(--lighter-gray);
+  padding: 0.125rem 0.5rem;
   border-radius: 12px;
   font-size: 0.8rem;
+  border: 1px solid var(--light-gray);
 }
 
 .post-menu {
   background: none;
   border: none;
-  color: #718096;
+  color: var(--medium-gray);
   cursor: pointer;
-  padding: 5px;
+  padding: 0.3125rem;
   border-radius: 4px;
+  transition: all 0.2s ease;
 }
 
 .post-menu:hover {
-  background: #f7fafc;
+  background: var(--lighter-gray);
+  color: var(--black);
 }
 
 .post-content {
-  margin-bottom: 15px;
+  margin-bottom: 1rem;
 }
 
 .post-content p {
   margin: 0;
   line-height: 1.6;
-  color: #2d3748;
+  color: var(--black);
   font-size: 1rem;
 }
 
 .post-related-data {
   display: flex;
-  gap: 15px;
-  margin-top: 10px;
+  gap: 1rem;
+  margin-top: 0.625rem;
   flex-wrap: wrap;
 }
 
 .data-item {
-  background: #f7fafc;
-  padding: 5px 10px;
+  background: var(--lighter-gray);
+  padding: 0.3125rem 0.625rem;
   border-radius: 8px;
   font-size: 0.9rem;
-  color: #4a5568;
-  border: 1px solid #e2e8f0;
+  color: var(--black);
+  border: 1px solid var(--light-gray);
 }
 
 .post-stats {
   display: flex;
-  gap: 15px;
-  margin-bottom: 10px;
+  gap: 1rem;
+  margin-bottom: 0.625rem;
   font-size: 0.9rem;
-  color: #718096;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e2e8f0;
+  color: var(--medium-gray);
+  padding-bottom: 0.625rem;
+  border-bottom: 1px solid var(--light-gray);
 }
 
 .post-actions {
   display: flex;
-  gap: 5px;
-  border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 15px;
+  gap: 0.3125rem;
+  border-bottom: 1px solid var(--light-gray);
+  padding-bottom: 1rem;
 }
 
 .action-btn {
   flex: 1;
   background: none;
   border: none;
-  padding: 10px;
+  padding: 0.625rem;
   border-radius: 6px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  color: #718096;
+  gap: 0.5rem;
+  color: var(--medium-gray);
   font-weight: 500;
   transition: all 0.3s ease;
 }
 
 .action-btn:hover {
-  background: #f7fafc;
-  color: #4a5568;
+  background: var(--lighter-gray);
+  color: var(--black);
 }
 
 .action-btn.liked {
-  color: #e53e3e;
+  color: var(--black);
 }
 
 .comments-section {
-  margin-top: 15px;
+  margin-top: 1rem;
 }
 
 .comments-list {
-  margin-bottom: 15px;
+  margin-bottom: 1rem;
 }
 
 .comment {
   display: flex;
-  gap: 10px;
-  margin-bottom: 12px;
-  padding: 10px;
-  background: #f7fafc;
+  gap: 0.625rem;
+  margin-bottom: 0.75rem;
+  padding: 0.625rem;
+  background: var(--lighter-gray);
   border-radius: 8px;
 }
 
@@ -160,12 +182,14 @@
   width: 35px;
   height: 35px;
   border-radius: 50%;
-  background: #e2e8f0;
+  background: var(--black);
+  color: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1rem;
   flex-shrink: 0;
+  font-weight: 600;
 }
 
 .comment-content {
@@ -175,64 +199,71 @@
 .comment-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 5px;
+  margin-bottom: 0.3125rem;
 }
 
 .comment-user {
-  font-weight: 600;
-  color: #2d3748;
+  font-weight: 700;
+  color: var(--black);
   font-size: 0.9rem;
 }
 
 .comment-time {
   font-size: 0.8rem;
-  color: #718096;
+  color: var(--medium-gray);
 }
 
 .comment-content p {
   margin: 0;
   font-size: 0.9rem;
   line-height: 1.4;
-  color: #4a5568;
+  color: var(--black);
 }
 
 .add-comment {
   display: flex;
-  gap: 10px;
+  gap: 0.625rem;
 }
 
 .comment-input {
   flex: 1;
-  padding: 10px 15px;
-  border: 1px solid #e2e8f0;
+  padding: 0.625rem 1rem;
+  border: 1px solid var(--border-gray);
   border-radius: 20px;
   font-size: 0.9rem;
   outline: none;
+  background: var(--white);
+  color: var(--black);
 }
 
 .comment-input:focus {
-  border-color: #6a11cb;
+  border-color: var(--black);
 }
 
 .comment-btn {
-  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-  color: white;
+  background: var(--black);
+  color: var(--white);
   border: none;
-  padding: 10px 20px;
+  padding: 0.625rem 1.25rem;
   border-radius: 20px;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.comment-btn:hover:not(:disabled) {
+  background: var(--dark-gray);
 }
 
 .comment-btn:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
   .post-card {
-    padding: 15px;
+    padding: 1rem;
   }
   
   .user-avatar {
@@ -243,7 +274,7 @@
   
   .post-related-data {
     flex-direction: column;
-    gap: 8px;
+    gap: 0.5rem;
   }
   
   .post-actions {
